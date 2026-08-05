@@ -1,0 +1,64 @@
+Lista de Tokens
+
+    Palabras Reservadas
+        esto
+        numerus
+        decimalis
+        textum
+        littera
+        verum
+        falsus
+        structura
+        si
+        finis
+        aliter
+        dum
+        facere
+        per
+        perge
+        interrumpe
+        actio
+        ratio
+        reddere
+        non
+       
+    Simbolos
+        +
+        -
+        *
+        /
+        =
+        ==
+        !=
+        >
+        >=
+        <
+        <=
+        &&
+        ||
+        ++
+        --
+        :
+        ;
+        [
+        ]
+        {
+        }
+        (
+        )
+        
+
+    Expresiones Regulares
+        ID
+        ENTEROS 
+        DECIMALES
+        CADENAS
+        CHAR
+        COMENTARIOS DE LINEA
+        COMENTARIOS DE BLOQUE
+        
+        
+        
+
+
+        
