@@ -2,12 +2,12 @@ grammar Codex;
 
 /**Analisis Sintactico**/
 inicio:
-    bloque_variabiles bloque_munera maior
+    bloque_variabiles bloque_munera bloque_maior
     ;
 
 /**BLOQUE VARIABILES**/
 bloque_variabiles:
-    VARIABILES variables
+    VARIABILES MAYOR_Q variables
     | /**lambda**/
     ;
 
@@ -192,13 +192,14 @@ parametro
 /**BLOQUE MAIOR**/
 
 
-maior
-    : MAIOR instrucciones FINIS
+bloque_maior
+    : MAIOR instrucciones FINIS_MAY P_COMA
     ;
 
 instrucciones
     : instrucciones instruccion
     | instruccion
+    | /**lambda**/
     ;
 
 instruccion
@@ -207,6 +208,7 @@ instruccion
     | ciclo_do_while
     | ciclo_iterador
     | operacion_abrev
+    | asignacion
     | fun_lectura
     | fun_lectura_guardado
     | fun_impresion
@@ -298,7 +300,7 @@ condicion
 /**Analisis Lexico**/
 
 /**palabras reservadas**/
-VARIABILES: 'VARIABILES>';
+VARIABILES: 'VARIABILES';
 MUNERA: 'MUNERA>';
 MAIOR:  'MAIOR>';
 ESTO:   'esto';
@@ -312,6 +314,7 @@ FALSUS: 'falsus';
 STRUCTURA:  'structura';
 SI: 'si';
 FINIS:  'finis';
+FINIS_MAY: 'FINIS';
 ALITER: 'aliter';
 DUM:    'dum';
 FACERE: 'facere';
@@ -354,8 +357,8 @@ PAR_C:  ')';
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 ENTERO: [0-9]+ ;
 DECIMAL: [0-9]+ '.' [0-9]+;
-CADENA : '"' [^"\r\n]* '"' ;
+CADENA : '"' .*? '"' ;
 CHAR : '\'' [^'\r\n] '\'' ;
 COMENTARIO_LINEA : '//' ~[\r\n]* -> channel(HIDDEN) ;
-COMENTARIO_BLOQUE : '/*' .*? '*/' -> channel(HIDDEN) ;
-WS: [ \t\n\r] -> skip;
+COMENTARIO_BLOQUE : '##' .*? '##' -> channel(HIDDEN) ;
+WS: [ \t\n\r\f\u00A0\u200B] -> skip;

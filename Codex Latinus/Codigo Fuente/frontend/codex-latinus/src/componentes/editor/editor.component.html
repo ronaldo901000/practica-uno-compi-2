@@ -1,0 +1,30 @@
+<div class="editor-container d-flex flex-column bg-dark text-light">
+
+  <div class="editor-tabs border-bottom border-secondary d-flex">
+      <div class="tab d-flex align-items-center px-3 py-2 active-tab">
+
+      </div>
+  </div>
+
+
+    <div class="editor-body d-flex">
+
+      <div id="line-counter" class="line-counter text-secondary text-end py-3 pe-2">
+        @for (linea of lineas; track linea) {
+          <div class="line-number">{{ linea }}</div>
+        }
+      </div>
+
+      <textarea
+        class="editor-textarea py-3 px-2"
+        [value]="contenido"
+        (input)="onContenidoCambia($any($event.target).value)"
+        (input)="onTextoChange($any($event.target).value)"
+        (scroll)="sincronizarScroll($event)"
+        spellcheck="false"
+      ></textarea>
+
+    </div>
+ 
+
+</div>
