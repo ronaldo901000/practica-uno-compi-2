@@ -269,9 +269,13 @@ expresion:
     | CHAR
     | VERUM
     | FALSUS
-    | ID CORCH_A ENTERO CORCH_C
+    | valor_posicion_array
     | llamada_funcion
     | ID
+    ;
+
+valor_posicion_array
+    : ID CORCH_A ENTERO CORCH_C
     ;
 
 llamada_funcion
