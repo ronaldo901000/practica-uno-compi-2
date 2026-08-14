@@ -2,16 +2,13 @@ package com.ronaldo.codex.api.condicion;
 
 import com.ronaldo.codex.api.enums.TipoCondicion;
 import com.ronaldo.codex.api.nodo.Nodo;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author ronaldo
  */
-@Getter
-@Setter
-public class Condicion extends Nodo{
+public class Condicion extends Nodo {
+
     private Object valorUno;
     private Object valorDos;
     private TipoCondicion tipo;
@@ -26,4 +23,29 @@ public class Condicion extends Nodo{
     public Condicion(Object valorUno, TipoCondicion tipo, int fila, int columna) {
         this(valorUno, null, tipo, fila, columna);
     }
+
+    public Object getValorUno() {
+        return valorUno;
+    }
+
+    public void setValorUno(Object valorUno) {
+        this.valorUno = valorUno;
+    }
+
+    public Object getValorDos() {
+        return valorDos;
+    }
+
+    public void setValorDos(Object valorDos) {
+        this.valorDos = valorDos;
+    }
+
+    public TipoCondicion getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoCondicion tipo) {
+        this.tipo = tipo;
+    }
+
 }

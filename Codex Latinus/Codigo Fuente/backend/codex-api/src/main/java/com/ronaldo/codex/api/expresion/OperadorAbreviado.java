@@ -1,15 +1,11 @@
 package com.ronaldo.codex.api.expresion;
 
 import com.ronaldo.codex.api.enums.TipoOperadorAbreviado;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author ronaldo
  */
-@Getter
-@Setter
 public class OperadorAbreviado extends Expresion {
 
     private TipoOperadorAbreviado tipo;
@@ -18,6 +14,22 @@ public class OperadorAbreviado extends Expresion {
     public OperadorAbreviado(TipoOperadorAbreviado tipo, String id, int fila, int columna) {
         super(fila, columna);
         this.tipo = tipo;
+        this.id = id;
+    }
+
+    public TipoOperadorAbreviado getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoOperadorAbreviado tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
         this.id = id;
     }
 

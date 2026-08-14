@@ -1,15 +1,11 @@
 package com.ronaldo.codex.api.aritmetica;
 
 import com.ronaldo.codex.api.expresion.Expresion;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author ronaldo
  */
-@Getter
-@Setter
 public class Aritmetica extends Expresion {
 
     private Object valorUno;
@@ -21,7 +17,20 @@ public class Aritmetica extends Expresion {
         this.valorDos = valorDos;
     }
 
-    
-    
+    public Object getValorUno() {
+        return valorUno;
+    }
+
+    public void setValorUno(Object valorUno) {
+        this.valorUno = valorUno;
+    }
+
+    public Object getValorDos() {
+        return valorDos;
+    }
+
+    public void setValorDos(Object valorDos) {
+        this.valorDos = valorDos;
+    }
 
 }

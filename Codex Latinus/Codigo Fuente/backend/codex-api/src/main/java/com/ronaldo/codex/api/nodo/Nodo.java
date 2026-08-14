@@ -1,18 +1,13 @@
 package com.ronaldo.codex.api.nodo;
 
 import com.ronaldo.codex.api.interfaces.Visitable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author ronaldo
  */
+public class Nodo implements Visitable {
 
-@Getter
-@Setter
-public class Nodo implements Visitable{
     private int fila;
     private int columna;
 
@@ -20,6 +15,21 @@ public class Nodo implements Visitable{
         this.fila = fila;
         this.columna = columna;
     }
-    
-  
+
+    public int getFila() {
+        return fila;
+    }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
+
+    public int getColumna() {
+        return columna;
+    }
+
+    public void setColumna(int columna) {
+        this.columna = columna;
+    }
+
 }

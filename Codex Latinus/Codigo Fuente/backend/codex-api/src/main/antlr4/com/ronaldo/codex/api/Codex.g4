@@ -7,14 +7,10 @@ inicio:
 
 /**BLOQUE VARIABILES**/
 bloque_variabiles:
-    VARIABILES MAYOR_Q variables
+    VARIABILES MAYOR_Q variable*
     | /**lambda**/
     ;
 
-variables
-    : variables variable
-    | variable
-    ;
 
 variable:
     variable_simple
@@ -87,7 +83,7 @@ tipo_dato_atributo
 
 /**construccion de la estructura**/
 constr_structura
-    : ESTO ID P_COMA ID LLAVE_A  LLAVE_C
+    : ESTO ID P_COMA ID LLAVE_A elementos_construccion  LLAVE_C
     ;
 
 elementos_construccion
@@ -122,15 +118,11 @@ asignacion
 
 /**BLOQUE MUNERA**/
 bloque_munera:
-    MUNERA funciones
+    MUNERA funcion*
     | /**lambda**/
     ;
 
 /**funciones**/
-funciones
-    : funciones funcion
-    | funcion
-    ;
 
 funcion
     : funcion_sin_retorno
@@ -140,14 +132,14 @@ funcion
 funcion_sin_retorno
     :ACTIO ID 
         PAR_A parametros PAR_C 
-        LLAVE_A seccion_var_funcion instrucciones 
+        LLAVE_A seccion_var_funcion instruccion* 
         LLAVE_C FINIS 
      P_COMA
     ;
 
 funcion_con_retorno
     : RATIO tipo_dato ID PAR_A parametros PAR_C 
-        LLAVE_A seccion_var_funcion instrucciones REDDERE ID P_COMA
+        LLAVE_A seccion_var_funcion instruccion* REDDERE ID P_COMA
         LLAVE_C FINIS 
       P_COMA  
     ;
@@ -176,12 +168,13 @@ impresion
 
 
 seccion_var_funcion
-    : VARIABILES CORCH_A variables CORCH_C
+    : VARIABILES CORCH_A variable* CORCH_C
     ;
     
 parametros
     : parametros COMA parametro
     | parametro
+    | /**lambda**/
     ;
 
 parametro
@@ -193,17 +186,12 @@ parametro
 
 
 bloque_maior
-    : MAIOR instrucciones FINIS_MAY P_COMA
+    : MAIOR instruccion* FINIS_MAY P_COMA
     ;
 
-instrucciones
-    : instrucciones instruccion
-    | instruccion
-    | /**lambda**/
-    ;
 
 instruccion
-    : condicional
+    : condicional //if /**agregar llamadas a funciones con y sin retorno**/
     | ciclo_simple
     | ciclo_do_while
     | ciclo_iterador
@@ -217,24 +205,23 @@ instruccion
 /**CONDICIONALES**/
 
 condicional
-    : SI PAR_A condicion PAR_C LLAVE_A instrucciones LLAVE_C FINIS P_COMA
+    : SI PAR_A condicion PAR_C LLAVE_A instruccion* LLAVE_C mas_condicionales* FINIS P_COMA
     ;
 
 mas_condicionales
-    : ALITER PAR_A condicion PAR_C LLAVE_A instrucciones LLAVE_C mas_condicionales
-    | ALITER LLAVE_A LLAVE_C mas_condicionales
-    | /**lambda**/
+    : ALITER PAR_A condicion PAR_C LLAVE_A instruccion* LLAVE_C mas_condicionales*
+    | ALITER LLAVE_A LLAVE_C
     ;
     
 
 /**CICLOS**/
 
 ciclo_simple
-    : DUM PAR_A condicion PAR_C LLAVE_A instrucciones LLAVE_C FINIS P_COMA
+    : DUM PAR_A condicion PAR_C LLAVE_A instruccion* LLAVE_C FINIS P_COMA
     ;
 
 ciclo_do_while
-    : FACERE LLAVE_A instrucciones LLAVE_C DUM PAR_A condicion PAR_C P_COMA
+    : FACERE LLAVE_A instruccion* LLAVE_C DUM PAR_A condicion PAR_C P_COMA
     ;
 
 ciclo_iterador
@@ -243,7 +230,7 @@ ciclo_iterador
             ESTO ID DOS_P tipo_dato expresion P_COMA 
             condicion P_COMA 
             expresion_iterador 
-        PAR_C LLAVE_A instrucciones 
+        PAR_C LLAVE_A instruccion*
       LLAVE_C
     ;
 
@@ -279,12 +266,13 @@ valor_posicion_array
     ;
 
 llamada_funcion
-    : ID PAR_A parametros_llamada PAR_C P_COMA
+    : ID PAR_A parametros_llamada PAR_C 
     ;
 
 parametros_llamada
     : parametros_llamada COMA expresion
     | expresion
+    | /**lambda**/
     ;
 
 condicion

@@ -2,16 +2,13 @@ package com.ronaldo.codex.api.aritmetica;
 
 import com.ronaldo.codex.api.enums.Tipo;
 import com.ronaldo.codex.api.expresion.Expresion;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author ronaldo
  */
-@Getter
-@Setter
-public class ElementoTerminal extends Expresion{
+public class ElementoTerminal extends Expresion {
+
     private Tipo tipo;
     private Object valor;
 
@@ -19,6 +16,22 @@ public class ElementoTerminal extends Expresion{
         super(fila, columna);
         this.valor = valor;
         this.tipo = tipo;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
+
+    public Object getValor() {
+        return valor;
+    }
+
+    public void setValor(Object valor) {
+        this.valor = valor;
     }
 
 }
