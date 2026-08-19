@@ -1,7 +1,10 @@
 package com.ronaldo.codex.api.structura;
 
+import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorSemantico;
 import com.ronaldo.codex.api.enums.EstructuraDato;
+import com.ronaldo.codex.api.enums.Tipo;
 import com.ronaldo.codex.api.nodo.Nodo;
+import com.ronaldo.codex.api.semantica.Semantica;
 import com.ronaldo.codex.api.services.verificacion.VerificadorTipos;
 
 /**
@@ -13,6 +16,7 @@ public class AtributoStructura extends Nodo {
     private EstructuraDato estructura;
     private String id;
     private String tipoDato;
+    private Tipo tipoResultado;
 
     public AtributoStructura(String id, String tipoDato, int fila, int columna, String estructuraCadena) {
         super(fila, columna);
@@ -21,6 +25,32 @@ public class AtributoStructura extends Nodo {
 
         VerificadorTipos vt = new VerificadorTipos();
         this.estructura = vt.verificarEstructuraDato(id);
+    }
+
+    @Override
+    public void verificarSemantica(Semantica semantica) throws Exception {
+        if (!semantica.getTablaTipos().existeTipo(this.tipoDato)) {
+            this.tipoResultado = Tipo.ERROR;
+            semantica.getErrores().add(new ErrorSemantico(
+                    getFila(),
+                    getColumna(),
+                    this.id,
+                    "El tipo de dato '" + this.tipoDato
+                    + "' especificado para el atributo '" + this.id + "' no existe"
+            ));
+            return;
+        }
+
+        this.tipoResultado = obtenerTipoEnum(this.tipoDato);
+    }
+
+    private Tipo obtenerTipoEnum(String nombreTipo) {
+        for (Tipo t : Tipo.values()) {
+            if (t.getText() != null && t.getText().equalsIgnoreCase(nombreTipo)) {
+                return t;
+            }
+        }
+        return Tipo.STRUCTURA;
     }
 
     public EstructuraDato getEstructura() {
@@ -45,6 +75,30 @@ public class AtributoStructura extends Nodo {
 
     public void setTipoDato(String tipoDato) {
         this.tipoDato = tipoDato;
+    }
+
+    public Tipo getTipoResultado() {
+        return tipoResultado;
+    }
+
+    public void setTipoResultado(Tipo tipoResultado) {
+        this.tipoResultado = tipoResultado;
+    }
+
+    public int getFila() {
+        return fila;
+    }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
+
+    public int getColumna() {
+        return columna;
+    }
+
+    public void setColumna(int columna) {
+        this.columna = columna;
     }
 
 }

@@ -1,7 +1,9 @@
 package com.ronaldo.codex.api.asignacion;
 
+import com.ronaldo.codex.api.enums.Tipo;
 import com.ronaldo.codex.api.expresion.OperadorAbreviado;
 import com.ronaldo.codex.api.instruccion.Instruccion;
+import com.ronaldo.codex.api.semantica.Semantica;
 
 /**
  *
@@ -14,6 +16,17 @@ public class AsignacionAbreviada extends Instruccion {
     public AsignacionAbreviada(OperadorAbreviado operador, int fila, int columna) {
         super(fila, columna);
         this.operador = operador;
+    }
+
+    @Override
+    public void verificarSemantica(Semantica semantica) throws Exception {
+        if (this.operador != null) {
+            this.operador.verificarSemantica(semantica);
+
+            if (this.operador.getTipoResultado() == Tipo.ERROR) {
+                return;
+            }
+        }
     }
 
     public OperadorAbreviado getOperador() {

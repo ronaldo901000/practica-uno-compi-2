@@ -2,6 +2,7 @@ package com.ronaldo.codex.api.aritmetica;
 
 import com.ronaldo.codex.api.enums.Tipo;
 import com.ronaldo.codex.api.expresion.Expresion;
+import com.ronaldo.codex.api.semantica.Semantica;
 
 /**
  *
@@ -16,6 +17,12 @@ public class ElementoTerminal extends Expresion {
         super(fila, columna);
         this.valor = valor;
         this.tipo = tipo;
+        this.tipoResultado = tipo;
+    }
+
+    @Override
+    public void verificarSemantica(Semantica semantica) throws Exception {
+        this.tipoResultado = this.tipo;
     }
 
     public Tipo getTipo() {

@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author ronaldo
  */
-public class Condicional extends Instruccion {
+public abstract class Condicional extends Instruccion {
 
     protected Condicion condicion;
     protected List<Instruccion> instruccionesInternas;

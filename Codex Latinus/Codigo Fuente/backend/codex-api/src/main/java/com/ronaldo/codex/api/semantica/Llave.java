@@ -1,4 +1,6 @@
-package com.ronaldo.codex.api.tabla.simbolos;
+package com.ronaldo.codex.api.semantica;
+
+import java.util.Objects;
 
 /**
  *
@@ -7,11 +9,11 @@ package com.ronaldo.codex.api.tabla.simbolos;
 public class Llave {
 
     private String id;
-    private String alcance;
+    private String ambito;
 
     public Llave(String id, String alcance) {
         this.id = id;
-        this.alcance = alcance;
+        this.ambito = alcance;
     }
 
     public String getId() {
@@ -22,12 +24,12 @@ public class Llave {
         this.id = id;
     }
 
-    public String getAlcance() {
-        return alcance;
+    public String getAmbito() {
+        return ambito;
     }
 
     public void setAlcance(String alcance) {
-        this.alcance = alcance;
+        this.ambito = alcance;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.ronaldo.codex.api.funcion;
 
+import com.ronaldo.codex.api.semantica.Semantica;
+
 /**
  *
  * @author ronaldo
@@ -19,6 +21,11 @@ public class FuncionLecturaGuardado extends FuncionEspecial {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public void verificarSemantica(Semantica semantica) throws Exception {
+        
     }
 
 }

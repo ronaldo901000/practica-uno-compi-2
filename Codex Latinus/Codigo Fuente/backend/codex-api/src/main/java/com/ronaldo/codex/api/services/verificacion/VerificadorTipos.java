@@ -20,16 +20,16 @@ public class VerificadorTipos {
 
     public Tipo verificar(String entrada) {
         if (StringUtils.isBlank(entrada)) {
-            System.out.println("EN VERIFICADOR DE TIPOS LLEGO ALGO NULO");
+            return Tipo.BOOLEANO;
         }
 
         if (entrada.equals(NUMERUS)) {
             return Tipo.NUMERUS;
         } else if (entrada.equals(DECIMALIS)) {
-            return Tipo.DECIMAL;
+            return Tipo.DECIMALIS;
         } else if (entrada.equals(TEXTUM)) {
             return Tipo.TEXTUM;
-        } else if (entrada.equals(TEXTUM)) {
+        } else if (entrada.equals(LITTERA)) {
             return Tipo.LITTERA;
         }
         return null;

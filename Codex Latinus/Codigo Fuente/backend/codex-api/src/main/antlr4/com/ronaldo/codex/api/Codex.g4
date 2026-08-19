@@ -33,7 +33,7 @@ variable_compuesta
     ;
     
 dec_array
-    : SERIES ID CORCH_A ENTERO DOS_P tipo_dato ini_array P_COMA
+    : SERIES ID CORCH_A ENTERO CORCH_C DOS_P tipo_dato ini_array P_COMA
     ;
 
 tipo_dato
@@ -113,8 +113,15 @@ elementos_asig
 
 /**ASIGNACION A VARIABLES SIMPLES**/
 asignacion 
-        : ID EQ expresion P_COMA
-        ;
+    : ID EQ expresion P_COMA
+    ;
+
+
+
+/**ASIGNACION A ARREGLOS**/
+asignacion_array
+    : ID tamaño_array EQ expresion P_COMA
+    ;
 
 /**BLOQUE MUNERA**/
 bloque_munera:
@@ -131,17 +138,17 @@ funcion
 
 funcion_sin_retorno
     :ACTIO ID 
-        PAR_A parametros PAR_C 
-        LLAVE_A seccion_var_funcion instruccion* 
-        LLAVE_C FINIS 
-     P_COMA
+    PAR_A parametros PAR_C 
+    LLAVE_A seccion_var_funcion instruccion* 
+    LLAVE_C FINIS 
+    P_COMA
     ;
 
 funcion_con_retorno
     : RATIO tipo_dato ID PAR_A parametros PAR_C 
-        LLAVE_A seccion_var_funcion instruccion* REDDERE ID P_COMA
-        LLAVE_C FINIS 
-      P_COMA  
+    LLAVE_A seccion_var_funcion instruccion* REDDERE ID P_COMA
+    LLAVE_C FINIS 
+    P_COMA  
     ;
 
 /**funciones especiales**/
@@ -197,6 +204,7 @@ instruccion
     | ciclo_iterador
     | operacion_abrev
     | asignacion
+    | asignacion_array
     | fun_lectura
     | fun_lectura_guardado
     | fun_impresion
@@ -226,12 +234,12 @@ ciclo_do_while
 
 ciclo_iterador
     : PER 
-        PAR_A 
-            ESTO ID DOS_P tipo_dato expresion P_COMA 
-            condicion P_COMA 
-            expresion_iterador 
-        PAR_C LLAVE_A instruccion*
-      LLAVE_C
+    PAR_A 
+    ESTO ID DOS_P tipo_dato expresion P_COMA 
+    condicion P_COMA 
+    expresion_iterador 
+    PAR_C LLAVE_A instruccion*
+    LLAVE_C
     ;
 
 expresion_iterador
@@ -244,20 +252,20 @@ operacion_abrev
     | ID MENOS_MENOS
     ;
     
-expresion:
-    expresion MULTI expresion
+expresion
+    : PAR_A expresion PAR_C
+    | expresion MULTI expresion
     | expresion DIV expresion
     | expresion MAS expresion
     | expresion MENOS expresion
-    | PAR_A expresion PAR_C
+    | valor_posicion_array
+    | llamada_funcion
     | ENTERO
     | DECIMAL
     | CADENA
     | CHAR
     | VERUM
     | FALSUS
-    | valor_posicion_array
-    | llamada_funcion
     | ID
     ;
 

@@ -6,10 +6,10 @@ import com.ronaldo.codex.api.interfaces.Visitable;
  *
  * @author ronaldo
  */
-public class Nodo implements Visitable {
+public abstract class Nodo implements Visitable {
 
-    private int fila;
-    private int columna;
+    protected int fila;
+    protected int columna;
 
     public Nodo(int fila, int columna) {
         this.fila = fila;
@@ -25,7 +25,7 @@ public class Nodo implements Visitable {
     }
 
     public int getColumna() {
-        return columna;
+        return columna + 1;
     }
 
     public void setColumna(int columna) {

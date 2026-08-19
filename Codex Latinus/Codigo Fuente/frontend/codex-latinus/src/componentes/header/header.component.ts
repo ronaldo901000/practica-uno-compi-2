@@ -15,7 +15,7 @@ import { RespuestaService } from '../../servicios/respuesta/Respuesta.service';
 export class HeaderComponent {
 
   constructor(
-    private textoService: TextoEntradaService, 
+    private textoService: TextoEntradaService,
     private ejecutorService: EjecutorService,
     private respuestaService: RespuestaService
   ) { }
@@ -33,7 +33,8 @@ export class HeaderComponent {
         console.log('Contiene Errores :', respuesta.hayErrores);
       },
       error: (err) => {
-        console.error('Error:', err);
+        console.log('HAY ERRORES');
+        console.error('Error:', err.error?.mensaje ?? err.message);
       }
     });
   }

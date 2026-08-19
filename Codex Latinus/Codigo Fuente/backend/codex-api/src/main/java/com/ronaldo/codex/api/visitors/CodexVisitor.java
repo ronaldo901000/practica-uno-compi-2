@@ -9,6 +9,7 @@ import com.ronaldo.codex.api.aritmetica.Resta;
 import com.ronaldo.codex.api.aritmetica.Suma;
 import com.ronaldo.codex.api.asignacion.Asignacion;
 import com.ronaldo.codex.api.asignacion.AsignacionAbreviada;
+import com.ronaldo.codex.api.asignacion.AsignacionArray;
 import com.ronaldo.codex.api.bloque.maior.BloqueMaior;
 import com.ronaldo.codex.api.bloque.munera.BloqueMunera;
 import com.ronaldo.codex.api.bloque.variables.BloqueVariables;
@@ -38,7 +39,7 @@ import com.ronaldo.codex.api.funcion.FuncionLectura;
 import com.ronaldo.codex.api.funcion.FuncionLecturaGuardado;
 import com.ronaldo.codex.api.funcion.FuncionReturn;
 import com.ronaldo.codex.api.funcion.FuncionVoid;
-import com.ronaldo.codex.api.inicio.Inicio;
+import com.ronaldo.codex.api.inicio.Ast;
 import com.ronaldo.codex.api.instruccion.Instruccion;
 import com.ronaldo.codex.api.interfaces.Visitable;
 import com.ronaldo.codex.api.parametros.creacion.ParametroCreacion;
@@ -57,12 +58,13 @@ import java.util.List;
 public class CodexVisitor extends CodexBaseVisitor<Visitable> {
 
     @Override
-    public Inicio visitInicio(CodexParser.InicioContext ctx) {
+    public Ast visitInicio(CodexParser.InicioContext ctx) {
         BloqueVariables bloqueVariables = (BloqueVariables) visit(ctx.bloque_variabiles());
         BloqueMaior bloqueMaior = (BloqueMaior) visit(ctx.bloque_maior());
+        BloqueMunera bloqueMunera = (BloqueMunera) visit(ctx.bloque_munera());
         int fila = ctx.start.getLine();
         int columna = ctx.start.getCharPositionInLine();
-        return new Inicio(bloqueVariables, bloqueMaior, fila, columna);
+        return new Ast(bloqueVariables, bloqueMunera, bloqueMaior, fila, columna);
     }
 
     @Override
@@ -218,7 +220,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         if (ctx.atributo() != null) {
             AtributoStructura atributo = visitAtributo(ctx.atributo());
             if (atributo != null) {
-                contenedor.getAtributos().add(atributo); 
+                contenedor.getAtributos().add(atributo);
             }
         }
     }
@@ -262,8 +264,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         return visitChildren(ctx);
     }
 
-    */
-    
+     */
     @Override
     public Asignacion visitAsignacion(CodexParser.AsignacionContext ctx) {
         int fila = ctx.ID().getSymbol().getLine();
@@ -273,6 +274,17 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         Expresion expresion = (Expresion) visit(ctx.expresion());
 
         return new Asignacion(id, expresion, fila, columna);
+    }
+
+    @Override
+    public AsignacionArray visitAsignacion_array(CodexParser.Asignacion_arrayContext ctx) {
+        int fila = ctx.start.getLine();
+        int columna = ctx.start.getCharPositionInLine();
+        int posicion = Integer.parseInt(ctx.tamaño_array().ENTERO().getText());
+        String id = ctx.ID().getText();
+        Expresion expresion = (Expresion) visit(ctx.expresion());
+
+        return new AsignacionArray(id, posicion, expresion, fila, columna);
     }
 
     @Override
@@ -515,7 +527,9 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         } else if (ctx.fun_lectura_guardado() != null) {
             return (FuncionLecturaGuardado) visit(ctx.fun_lectura_guardado());
         } else if (ctx.fun_impresion() != null) {
-            return (FuncionImpresion) visit(ctx.fun_lectura());
+            return (FuncionImpresion) visit(ctx.fun_impresion());
+        } else if (ctx.asignacion_array() != null) {
+            return (AsignacionArray) visit(ctx.asignacion_array());
         }
         return null;
     }
@@ -662,8 +676,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.MULTI().getSymbol().getLine();
             int columna = ctx.MULTI().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Multiplicacion(izquierda, derecha, fila, columna);
 
@@ -671,8 +685,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.DIV().getSymbol().getLine();
             int columna = ctx.DIV().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Division(izquierda, derecha, fila, columna);
 
@@ -681,8 +695,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.MAS().getSymbol().getLine();
             int columna = ctx.MAS().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Suma(izquierda, derecha, fila, columna);
 
@@ -691,8 +705,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.MENOS().getSymbol().getLine();
             int columna = ctx.MENOS().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Resta(izquierda, derecha, fila, columna);
 
@@ -706,7 +720,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
 
             int fila = ctx.DECIMAL().getSymbol().getLine();
             int columna = ctx.DECIMAL().getSymbol().getCharPositionInLine();
-            return new ElementoTerminal(fila, columna, ctx.DECIMAL().getText(), Tipo.DECIMAL);
+            return new ElementoTerminal(fila, columna, ctx.DECIMAL().getText(), Tipo.DECIMALIS);
 
         } else if (ctx.CADENA() != null) {
 
@@ -857,7 +871,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             Object izquierda = visit(ctx.condicion(0));
             Object derecha = visit(ctx.condicion(1));
 
-            return new Condicion(izquierda, derecha, TipoCondicion.Y, fila, columna);
+            return new Condicion(izquierda, derecha, TipoCondicion.AND, fila, columna);
 
         } else if (ctx.OR() != null) {
             int fila = ctx.OR().getSymbol().getLine();
@@ -866,7 +880,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             Object izquierda = visit(ctx.condicion(0));
             Object derecha = visit(ctx.condicion(1));
 
-            return new Condicion(izquierda, derecha, TipoCondicion.O, fila, columna);
+            return new Condicion(izquierda, derecha, TipoCondicion.OR, fila, columna);
 
         } else if (ctx.NON() != null) {
             int fila = ctx.NON().getSymbol().getLine();
@@ -874,7 +888,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
 
             Object valor = visit(ctx.condicion(0));
 
-            return new Condicion(valor, TipoCondicion.NEGACION, fila, columna);
+            return new Condicion(valor, TipoCondicion.NOT, fila, columna);
 
         } else if (ctx.PAR_A() != null) {
 

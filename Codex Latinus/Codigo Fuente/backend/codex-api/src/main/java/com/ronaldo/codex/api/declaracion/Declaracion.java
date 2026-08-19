@@ -8,8 +8,8 @@ import com.ronaldo.codex.api.services.verificacion.VerificadorTipos;
  *
  * @author ronaldo
  */
-public class Declaracion extends Nodo {
-
+public abstract class Declaracion extends Nodo {
+    
     protected String id;
     protected Tipo tipo;
 

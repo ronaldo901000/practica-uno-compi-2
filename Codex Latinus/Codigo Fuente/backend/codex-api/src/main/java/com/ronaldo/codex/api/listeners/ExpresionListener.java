@@ -2,7 +2,7 @@ package com.ronaldo.codex.api.listeners;
 
 import com.ronaldo.codex.api.CodexBaseListener;
 import com.ronaldo.codex.api.CodexParser;
-import com.ronaldo.codex.api.tabla.simbolos.TablaSimbolos;
+import com.ronaldo.codex.api.semantica.TablaSimbolos;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 /**

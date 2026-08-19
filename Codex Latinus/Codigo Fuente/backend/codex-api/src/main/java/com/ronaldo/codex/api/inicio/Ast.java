@@ -1,22 +1,40 @@
 package com.ronaldo.codex.api.inicio;
 
 import com.ronaldo.codex.api.bloque.maior.BloqueMaior;
+import com.ronaldo.codex.api.bloque.munera.BloqueMunera;
 import com.ronaldo.codex.api.bloque.variables.BloqueVariables;
 import com.ronaldo.codex.api.nodo.Nodo;
+import com.ronaldo.codex.api.semantica.Semantica;
 
 /**
  *
  * @author ronaldo
  */
-public class Inicio extends Nodo {
+public class Ast extends Nodo {
 
     private BloqueVariables bloqueVariables;
     private BloqueMaior bloqueMaior;
+    private BloqueMunera bloqueMunera;
 
-    public Inicio(BloqueVariables bloqueVariables, BloqueMaior bloqueMaior, int fila, int columna) {
+    public Ast(
+            BloqueVariables bloqueVariables, BloqueMunera bloqueMunera,
+            BloqueMaior bloqueMaior, int fila, int columna) {
         super(fila, columna);
         this.bloqueVariables = bloqueVariables;
         this.bloqueMaior = bloqueMaior;
+        this.bloqueMunera = bloqueMunera;
+    }
+
+    @Override
+    public void verificarSemantica(Semantica semantica) throws Exception {
+        if (this.bloqueVariables != null) {
+            this.bloqueVariables.verificarSemantica(semantica);
+        }
+        if(this.bloqueMunera != null){
+            this.bloqueMunera.verificarSemantica(semantica);
+        }
+        this.bloqueMaior.verificarSemantica(semantica);
+
     }
 
     public BloqueVariables getBloqueVariables() {
@@ -33,6 +51,14 @@ public class Inicio extends Nodo {
 
     public void setBloqueMaior(BloqueMaior bloqueMaior) {
         this.bloqueMaior = bloqueMaior;
+    }
+
+    public BloqueMunera getBloqueMunera() {
+        return bloqueMunera;
+    }
+
+    public void setBloqueMunera(BloqueMunera bloqueMunera) {
+        this.bloqueMunera = bloqueMunera;
     }
 
 }

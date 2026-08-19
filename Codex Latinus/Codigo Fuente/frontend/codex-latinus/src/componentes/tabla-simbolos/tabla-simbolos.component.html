@@ -1,0 +1,32 @@
+@if (respuestaService.respuesta$ | async; as respuesta) {
+  @if (!respuesta.hayErrores) {
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>CATEGORIA</th>
+          <th>TIPO</th>
+          <th>TIPO RETORNO</th>
+          <th>NUMERO PARAMETROS</th>
+          <th>TAMAÑO ARRAY</th>
+          <th>LISTA DE PARAMETROS</th>
+          <th>ALCANCE</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (simbolo of respuesta.tablaSimbolos; track $index) {
+          <tr>
+            <td>{{ simbolo.id }}</td>
+            <td>{{ simbolo.categoria }}</td>
+            <td>{{ simbolo.tipo }}</td>
+            <td>{{ simbolo.tipoRetorno }}</td>
+            <td>{{ simbolo.numeroParams }}</td>
+            <td>{{ simbolo.sizeArray }}</td>
+            <td>{{ simbolo.listaParams }}</td>
+            <td>{{ simbolo.alcance }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+}

@@ -11,7 +11,7 @@ public enum TipoCondicion {
     MAYOR,
     MENOR_IGUAL,
     MENOR,
-    Y,
-    O,
-    NEGACION
+    AND,
+    OR,
+    NOT
 }
