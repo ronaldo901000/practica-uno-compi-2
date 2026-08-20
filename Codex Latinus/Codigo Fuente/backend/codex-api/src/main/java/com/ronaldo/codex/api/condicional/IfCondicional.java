@@ -21,6 +21,21 @@ public class IfCondicional extends Condicional {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("isay(");
+        condicion.realizarTraduccion(sb);
+        sb.append("){\n");
+        for (Instruccion inst : instruccionesInternas) {
+            inst.realizarTraduccion(sb);
+        }
+        sb.append("}\n");
+        for (Condicional c : bifurcaciones) {
+            c.realizarTraduccion(sb);
+        }
+        sb.append("\n");
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
         if (this.condicion != null) {
@@ -34,7 +49,7 @@ public class IfCondicional extends Condicional {
                         getColumna(),
                         "if",
                         "La condicion de la sentencia 'si' debe ser de tipo "
-                                + "BOOLEANO, pero se obtuvo " + tipoCondicion
+                        + "BOOLEANO, pero se obtuvo " + tipoCondicion
                 ));
             }
         }

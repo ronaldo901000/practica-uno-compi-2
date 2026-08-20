@@ -22,6 +22,16 @@ public abstract class Ciclo extends Instruccion {
         this.instruccionesInternas = new ArrayList<>();
     }
 
+    protected void traducirInstruccionesInternas(StringBuffer sb) {
+        if (!this.instruccionesInternas.isEmpty()) {
+            for (Instruccion inst : this.instruccionesInternas) {
+                sb.append("\t");
+                inst.realizarTraduccion(sb);
+                sb.append("\n");
+            }
+        }
+    }
+
     public void agregarInstruccionInterna(Instruccion instruccion) {
         this.instruccionesInternas.add(instruccion);
     }

@@ -1,13 +1,14 @@
-
-
 <nav
   class="header-fijo navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary shadow-sm"
 >
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <span class="text-white">CODEX  <span class="text-info">LATINUS</span></span>
-    </a >
-    <button class="m-2"
+      <span class="text-white"
+        >CODEX <span class="text-info">LATINUS</span></span
+      >
+    </a>
+    <button
+      class="m-2"
       class="navbar-toggler"
       type="button"
       data-bs-toggle="collapse"
@@ -23,6 +24,20 @@
         </button>
       </div>
     </div>
+    @if (sePuedeTraducir) {
+
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="d-flex align-items-center">
+        <button
+          class="btn btn-primary btn-sm fw-bold shadow-sm"
+          (click)="verTraduccion()"
+        >
+          <i class="bi bi-translate me-1"></i> Traducir a Pig Latin
+        </button>
+      </div>
+    </div>
+    }
   </div>
 </nav>
-<br>
+<br />

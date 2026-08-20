@@ -22,6 +22,17 @@ public class DeclaracionVariable extends Declaracion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("estoway ");
+        sb.append(traductor.traducir(id));
+        sb.append(" : ");
+        sb.append(tipo.getText());
+        sb.append(" ");
+        valor.realizarTraduccion(sb);
+        sb.append(";");
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
         String ambitoActual = semantica.ambitoActual();
@@ -50,7 +61,7 @@ public class DeclaracionVariable extends Declaracion {
             Tipo tipoValor = this.valor.getTipoResultado();
 
             if (tipoValor != Tipo.ERROR) {
-                
+
                 if (!esAsignable(this.tipo, tipoValor)) {
                     semantica.getErrores().add(new ErrorSemantico(
                             fila,

@@ -26,10 +26,20 @@ public class AsignacionArray extends Instruccion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append(traductor.traducir(id));
+        sb.append(" [");
+        sb.append(posicion);
+        sb.append("] ");
+        sb.append(" = ");
+        expresion.realizarTraduccion(sb);
+        sb.append("; " );
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         String ambitoActual = semantica.ambitoActual();
 
-        
         Simbolo variable = semantica.getTablaSimbolos().buscar(this.id, ambitoActual);
         if (variable == null) {
             variable = semantica.getTablaSimbolos().buscar(this.id, semantica.getGLOBAL());
@@ -44,7 +54,7 @@ public class AsignacionArray extends Instruccion {
             ));
             return;
         }
-        
+
         if (variable.getCategoria() != Categoria.ARRAY) {
             semantica.getErrores().add(new ErrorSemantico(
                     getFila(),
@@ -55,7 +65,7 @@ public class AsignacionArray extends Instruccion {
             return;
         }
 
-        int tamanoMaximo = variable.getTamañoArray(); 
+        int tamanoMaximo = variable.getTamañoArray();
         if (this.posicion < 0 || this.posicion >= tamanoMaximo) {
             semantica.getErrores().add(new ErrorSemantico(
                     getFila(),
@@ -80,7 +90,7 @@ public class AsignacionArray extends Instruccion {
             if (tipoArray != tipoExpresion) {
 
                 boolean esConversionPermitida = (tipoArray == Tipo.DECIMALIS && tipoExpresion == Tipo.NUMERUS)
-                        || (tipoArray == Tipo.TEXTUM); 
+                        || (tipoArray == Tipo.TEXTUM);
 
                 if (!esConversionPermitida) {
                     semantica.getErrores().add(new ErrorSemantico(

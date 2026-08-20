@@ -34,6 +34,22 @@ public class FuncionReturn extends Funcion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("atioray ");
+        sb.append(traductor.traducir(tipoRetorno.getText())).append(" ");
+
+        sb.append(traductor.traducir(id)).append("(");
+
+        traducirParametros(sb);
+        sb.append(") \n").append("{").append("\n");     
+        traducirSeccionVariables(sb);
+        traducirInstruccionesInternas(sb);
+        sb.append("eddereray ").append(traductor.traducir(idRetorno));
+        sb.append("} inisfay;\n");
+
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws PilaException, Exception {
 
         //Verifica que no exista una función con el mismo ID en el ambito global

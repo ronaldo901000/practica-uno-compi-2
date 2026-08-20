@@ -1,0 +1,31 @@
+<div class="traduccion-container shadow-sm border rounded-3 overflow-hidden my-3">
+  <!-- Barra superior estilo IDE -->
+  <div class="d-flex justify-content-between align-items-center bg-dark text-white px-3 py-2 border-bottom border-secondary">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-file-earmark-code text-primary fs-5"></i>
+      <span class="fw-semibold small">Traducción (Pig Latin)</span>
+    </div>
+    
+    <div class="d-flex gap-2">
+
+      <!-- Botón Descargar -->
+      <button 
+        type="button" 
+        class="btn btn-success btn-sm d-flex align-items-center gap-1 fw-semibold"
+        (click)="descargar()"
+        title="Descargar archivo .pig">
+        <i class="bi bi-download"></i>
+        <span>Descargar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Campo de Texto / Editor de Salida -->
+  <textarea 
+    class="editor-textarea py-3 px-3 text-light font-monospace w-100" 
+    [value]="contenido" 
+    readonly 
+    rows="10"
+    placeholder="// Aquí aparecerá el código traducido...">
+  </textarea>
+</div>

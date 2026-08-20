@@ -20,6 +20,15 @@ public class DeclaracionStructura extends Nodo {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append(traductor.traducir("structura"));
+        sb.append(traductor.traducir(id));
+        sb.append(" { \n");
+        atributos.realizarTraduccion(sb);
+        sb.append("}").append(traductor.traducir("finis")).append("; \n");
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
         if (semantica.getTablaTipos().existeTipo(this.id)) {

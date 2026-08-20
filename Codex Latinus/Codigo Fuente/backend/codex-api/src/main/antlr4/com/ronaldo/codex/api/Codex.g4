@@ -15,15 +15,16 @@ bloque_variabiles:
 variable:
     variable_simple
     | variable_compuesta
+    | dec_structura
     ;
 
 /**TIPO DE DATOS SIMPLES Y CADENAS**/
 variable_simple
-    : dec_var
+    : dec_var P_COMA
     ;
     
 dec_var:
-    ESTO ID DOS_P tipo_dato expresion P_COMA
+    ESTO ID DOS_P tipo_dato expresion 
     ;
 
 
@@ -198,7 +199,7 @@ bloque_maior
 
 
 instruccion
-    : condicional //if /**agregar llamadas a funciones con y sin retorno**/
+    : condicional //if 
     | ciclo_simple
     | ciclo_do_while
     | ciclo_iterador
@@ -208,6 +209,7 @@ instruccion
     | fun_lectura
     | fun_lectura_guardado
     | fun_impresion
+    | llamada_funcion P_COMA
     ;
 
 /**CONDICIONALES**/
@@ -235,7 +237,7 @@ ciclo_do_while
 ciclo_iterador
     : PER 
     PAR_A 
-    ESTO ID DOS_P tipo_dato expresion P_COMA 
+    dec_var P_COMA 
     condicion P_COMA 
     expresion_iterador 
     PAR_C LLAVE_A instruccion*

@@ -16,6 +16,13 @@ public class Division extends Aritmetica {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        valorUno.realizarTraduccion(sb);
+        sb.append(" / ");
+        valorDos.realizarTraduccion(sb);
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
         valorUno.verificarSemantica(semantica);
@@ -35,23 +42,21 @@ public class Division extends Aritmetica {
                     fila,
                     columna,
                     "/",
-                    "El tipo TEXTUM no es compatible con la operación de división."
+                    "El tipo TEXTUM no es compatible con la operación de division"
             ));
             return;
         }
 
-       
         if (esCero(valorDos)) {
             this.tipoResultado = Tipo.ERROR;
             semantica.getErrores().add(new ErrorSemantico(
                     fila,
                     columna,
                     "/",
-                    "Error Semántico: División entre cero."
+                    "No se puede dividir entre cero."
             ));
             return;
         }
-
 
         int jerarquiaUno = obtenerNivelJerarquiaResMultiDiv(tipoUno);
         int jerarquiaDos = obtenerNivelJerarquiaResMultiDiv(tipoDos);
@@ -62,7 +67,7 @@ public class Division extends Aritmetica {
                     fila,
                     columna,
                     "/",
-                    "No se pueden dividir estos tipos (" + tipoUno + " / " + tipoDos + ")."
+                    "No se pueden dividir estos tipos (" + tipoUno + " / " + tipoDos + ")"
             ));
             return;
         }

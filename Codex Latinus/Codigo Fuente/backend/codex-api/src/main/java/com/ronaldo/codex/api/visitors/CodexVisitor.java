@@ -39,7 +39,7 @@ import com.ronaldo.codex.api.funcion.FuncionLectura;
 import com.ronaldo.codex.api.funcion.FuncionLecturaGuardado;
 import com.ronaldo.codex.api.funcion.FuncionReturn;
 import com.ronaldo.codex.api.funcion.FuncionVoid;
-import com.ronaldo.codex.api.inicio.Ast;
+import com.ronaldo.codex.api.ast.Ast;
 import com.ronaldo.codex.api.instruccion.Instruccion;
 import com.ronaldo.codex.api.interfaces.Visitable;
 import com.ronaldo.codex.api.parametros.creacion.ParametroCreacion;
@@ -124,7 +124,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         int tamaño = Integer.parseInt(ctx.ENTERO().getText());
         String tipoDato = ctx.tipo_dato().getText();
 
-        if (ctx.ini_array() != null) {
+        if (ctx.ini_array().LLAVE_A() != null) {
             DeclaracionArray declaracionArray = (DeclaracionArray) visit(ctx.ini_array());
             declaracionArray.setFila(fila);
             declaracionArray.setColumna(columna);
@@ -620,10 +620,14 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
     public CicloIterador visitCiclo_iterador(CodexParser.Ciclo_iteradorContext ctx) {
         int fila = ctx.PER().getSymbol().getLine();
         int columna = ctx.PER().getSymbol().getCharPositionInLine();
-        Expresion expresionIterador = (Expresion) visit(ctx.expresion());
+        
+        DeclaracionVariable valor = (DeclaracionVariable) visit(ctx.dec_var());
         Condicion condicion = (Condicion) visit(ctx.condicion());
+        Expresion expresionIterador = (Expresion) visit(ctx.expresion_iterador());
+        
 
         CicloIterador cicloIterador = new CicloIterador(
+                valor,
                 expresionIterador,
                 condicion,
                 fila,
@@ -814,8 +818,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.EQ_EQ().getSymbol().getLine();
             int columna = ctx.EQ_EQ().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Condicion(izquierda, derecha, TipoCondicion.IGUAL, fila, columna);
 
@@ -823,8 +827,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.NO_EQ().getSymbol().getLine();
             int columna = ctx.NO_EQ().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Condicion(izquierda, derecha, TipoCondicion.DIFERENTE, fila, columna);
 
@@ -832,8 +836,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.MAYOR_EQ_Q().getSymbol().getLine();
             int columna = ctx.MAYOR_EQ_Q().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Condicion(izquierda, derecha, TipoCondicion.MAYOR_IGUAL, fila, columna);
 
@@ -841,8 +845,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.MAYOR_Q().getSymbol().getLine();
             int columna = ctx.MAYOR_Q().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Condicion(izquierda, derecha, TipoCondicion.MAYOR, fila, columna);
 
@@ -850,8 +854,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.MENOR_EQ_Q().getSymbol().getLine();
             int columna = ctx.MENOR_EQ_Q().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Condicion(izquierda, derecha, TipoCondicion.MENOR_IGUAL, fila, columna);
 
@@ -859,8 +863,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.MENOR_Q().getSymbol().getLine();
             int columna = ctx.MENOR_Q().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.expresion(0));
-            Object derecha = visit(ctx.expresion(1));
+            Expresion izquierda = (Expresion) visit(ctx.expresion(0));
+            Expresion derecha = (Expresion) visit(ctx.expresion(1));
 
             return new Condicion(izquierda, derecha, TipoCondicion.MENOR, fila, columna);
 
@@ -868,8 +872,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.AND().getSymbol().getLine();
             int columna = ctx.AND().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.condicion(0));
-            Object derecha = visit(ctx.condicion(1));
+            Expresion izquierda = (Expresion) visit(ctx.condicion(0));
+            Expresion derecha = (Expresion) visit(ctx.condicion(1));
 
             return new Condicion(izquierda, derecha, TipoCondicion.AND, fila, columna);
 
@@ -877,8 +881,8 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.OR().getSymbol().getLine();
             int columna = ctx.OR().getSymbol().getCharPositionInLine();
 
-            Object izquierda = visit(ctx.condicion(0));
-            Object derecha = visit(ctx.condicion(1));
+            Expresion izquierda = (Expresion) visit(ctx.condicion(0));
+            Expresion derecha = (Expresion) visit(ctx.condicion(1));
 
             return new Condicion(izquierda, derecha, TipoCondicion.OR, fila, columna);
 
@@ -886,7 +890,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int fila = ctx.NON().getSymbol().getLine();
             int columna = ctx.NON().getSymbol().getCharPositionInLine();
 
-            Object valor = visit(ctx.condicion(0));
+            Expresion valor = (Expresion) visit(ctx.condicion(0));
 
             return new Condicion(valor, TipoCondicion.NOT, fila, columna);
 

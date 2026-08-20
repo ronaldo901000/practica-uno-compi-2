@@ -1,6 +1,11 @@
 <app-header></app-header>
 
 <app-editor></app-editor>
+@if (traduccionService.sePuedeTraducir$ | async) {
+  @if (respuestaService.respuesta$ | async; as resp) {
+    <app-campo-traduccion [contenido]="resp.traduccionPigLatin"></app-campo-traduccion>
+  }
+}
 <app-tabla-errores></app-tabla-errores>
 <br>
 <app-tabla-simbolos></app-tabla-simbolos>

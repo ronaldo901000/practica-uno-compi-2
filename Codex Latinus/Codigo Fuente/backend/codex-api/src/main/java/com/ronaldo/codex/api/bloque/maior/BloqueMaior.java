@@ -19,6 +19,24 @@ public class BloqueMaior extends Nodo {
         this.instrucciones = new ArrayList<>();
     }
 
+    @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        if (instrucciones.isEmpty()) {
+            return;
+        }
+
+        sb.append(traductor.traducir("MAIOR>")).append("\n");
+
+        for (Instruccion inst : instrucciones) {
+            if (inst != null) {
+                inst.realizarTraduccion(sb);
+                sb.append("\n");
+            }
+
+        }
+
+    }
+
     public void insertarInstruccion(Instruccion instruccion) {
         this.instrucciones.add(instruccion);
     }
@@ -33,8 +51,8 @@ public class BloqueMaior extends Nodo {
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        for(Instruccion inst : instrucciones){
-            if(inst != null){
+        for (Instruccion inst : instrucciones) {
+            if (inst != null) {
                 inst.verificarSemantica(semantica);
             }
         }

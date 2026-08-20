@@ -13,6 +13,7 @@ public class RespuestaDTO {
     private boolean hayErrores;
     private List<ErrorAnalisis> errores;
     private List<SimboloDTO> tablaSimbolos;
+    private String traduccionPigLatin;
 
     public boolean isHayErrores() {
         return hayErrores;
@@ -36,6 +37,14 @@ public class RespuestaDTO {
 
     public void setTablaSimbolos(List<SimboloDTO> tablaSimbolos) {
         this.tablaSimbolos = tablaSimbolos;
+    }
+
+    public String getTraduccionPigLatin() {
+        return traduccionPigLatin;
+    }
+
+    public void setTraduccionPigLatin(String traduccionPigLatin) {
+        this.traduccionPigLatin = traduccionPigLatin;
     }
 
 }

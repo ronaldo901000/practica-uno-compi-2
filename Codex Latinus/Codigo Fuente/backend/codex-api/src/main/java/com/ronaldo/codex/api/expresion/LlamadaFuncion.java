@@ -24,6 +24,14 @@ public class LlamadaFuncion extends Expresion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append(traductor.traducir(id));
+        sb.append("(");
+        parametros.realizarTraduccion(sb);
+        sb.append(")");
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         String ambitoActual = semantica.ambitoActual();
 

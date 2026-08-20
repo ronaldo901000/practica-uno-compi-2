@@ -16,6 +16,13 @@ public class Resta extends Aritmetica {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        valorUno.realizarTraduccion(sb);
+        sb.append(" - ");
+        valorDos.realizarTraduccion(sb);
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
         valorUno.verificarSemantica(semantica);
@@ -59,6 +66,5 @@ public class Resta extends Aritmetica {
             this.tipoResultado = tipoDos;
         }
     }
-
 
 }

@@ -25,6 +25,15 @@ public class ParametroCreacion extends Nodo {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("estoway ");
+        sb.append(traductor.traducir(id));
+        sb.append(" : ");
+        sb.append(traductor.traducir(tipo.getText()));
+
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         if (this.tipo == null || this.tipo == Tipo.ERROR) {
             this.tipoResultado = Tipo.ERROR;

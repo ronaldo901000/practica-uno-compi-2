@@ -1,6 +1,8 @@
 package com.ronaldo.codex.api.funcion;
 
+import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorSemantico;
 import com.ronaldo.codex.api.semantica.Semantica;
+import com.ronaldo.codex.api.semantica.Simbolo;
 
 /**
  *
@@ -15,17 +17,42 @@ public class FuncionLecturaGuardado extends FuncionEspecial {
         this.id = id;
     }
 
+    @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        if (this.id == null || this.id.isEmpty()) {
+            return;
+        }
+
+        sb.append(traductor.traducir(id)).append(" %OINK OINK ;\n");
+    }
+
+    @Override
+    public void verificarSemantica(Semantica semantica) throws Exception {
+        if (this.id == null || this.id.isEmpty()) {
+            return;
+        }
+
+        Simbolo simbolo = semantica.getTablaSimbolos().buscar(this.id, semantica.ambitoActual());
+        if (simbolo == null) {
+            simbolo = semantica.getTablaSimbolos().buscar(this.id, semantica.getGLOBAL());
+        }
+
+        if (simbolo == null) {
+            semantica.getErrores().add(new ErrorSemantico(
+                    getFila(),
+                    getColumna(),
+                    this.id,
+                    "La variable '" + this.id + "' no ha sido declarada para lectura."
+            ));
+        }
+    }
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    @Override
-    public void verificarSemantica(Semantica semantica) throws Exception {
-        
     }
 
 }

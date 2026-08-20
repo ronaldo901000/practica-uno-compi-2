@@ -19,6 +19,11 @@ public class AsignacionAbreviada extends Instruccion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        operador.realizarTraduccion(sb);
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         if (this.operador != null) {
             this.operador.verificarSemantica(semantica);

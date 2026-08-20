@@ -17,6 +17,19 @@ public class CicloSimple extends Ciclo {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("umday (");
+
+        condicion.realizarTraduccion(sb);
+        sb.append(") { \n");
+
+        traducirInstruccionesInternas(sb);
+        
+        sb.append("} inisfay\n");
+
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
         if (this.getCondicion() != null) {

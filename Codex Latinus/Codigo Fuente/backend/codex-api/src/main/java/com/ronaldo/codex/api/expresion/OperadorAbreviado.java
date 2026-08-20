@@ -23,6 +23,13 @@ public class OperadorAbreviado extends Expresion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append(traductor.traducir(id));
+        sb.append(" ");
+        sb.append(tipo.getOperador());
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         String ambitoActual = semantica.ambitoActual();
 

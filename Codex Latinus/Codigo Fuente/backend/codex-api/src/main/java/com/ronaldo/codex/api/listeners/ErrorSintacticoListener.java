@@ -15,7 +15,9 @@ import org.antlr.v4.runtime.misc.IntervalSet;
  * @author ronaldo
  */
 public class ErrorSintacticoListener extends BaseErrorListener {
-
+    private static final String ERROR_CONDICION_BOOLEANA = "{'verum', 'falsus', 'non', '(', ID, ENTERO, DECIMAL, CADENA, CHAR}";
+    private static final String ERROR_ESPERADO_INSTRUCCIONES = "'si', 'dum', 'facere', 'per', '>', '<', ID";
+    
     private List<ErrorAnalisis> errores;
 
     public ErrorSintacticoListener(List<ErrorAnalisis> errores) {
@@ -44,6 +46,15 @@ public class ErrorSintacticoListener extends BaseErrorListener {
             tokensEsperados = esperados.toString(parser.getVocabulary());
         }
 
+        if (tokensEsperados.equals(ERROR_ESPERADO_INSTRUCCIONES)){
+            tokensEsperados = "Se esperaban instrucciones";
+        }
+        
+        if (tokensEsperados.equals(ERROR_CONDICION_BOOLEANA)){
+            tokensEsperados = "Se esperaba una condicion de tipo booleana";
+        }
+        
+        
         errores.add(
                 new ErrorSintactico(
                         line,

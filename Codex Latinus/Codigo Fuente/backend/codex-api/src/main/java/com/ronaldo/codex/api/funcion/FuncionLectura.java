@@ -14,7 +14,13 @@ public class FuncionLectura extends FuncionEspecial {
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        
+
+    }
+
+    @Override
+    public void realizarTraduccion(StringBuffer sb) {
+
+        sb.append("%OINK_OINK");
     }
 
 }

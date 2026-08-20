@@ -16,6 +16,17 @@ public class ElseIfCondicional extends Condicional {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("aliterway(");
+        condicion.realizarTraduccion(sb);
+        sb.append("){\n");
+        for (Instruccion inst : instruccionesInternas) {
+            inst.realizarTraduccion(sb);
+        }
+        sb.append("}\n");
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
         if (this.condicion != null) {

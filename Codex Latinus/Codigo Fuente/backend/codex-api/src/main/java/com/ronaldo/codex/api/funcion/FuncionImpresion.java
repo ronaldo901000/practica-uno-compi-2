@@ -18,6 +18,21 @@ public class FuncionImpresion extends FuncionEspecial {
         this.expresiones = new ArrayList<>();
     }
 
+    @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        if (this.expresiones == null || this.expresiones.isEmpty()) {
+            return;
+        }
+
+        for (Expresion exp : this.expresiones) {
+            if (exp != null) {
+                sb.append("%OINK ");
+                exp.realizarTraduccion(sb);
+                sb.append("\n"); 
+            }
+        }
+    }
+
     public void insertarCadena(Expresion expresion) {
         this.expresiones.add(expresion);
     }

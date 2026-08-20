@@ -1,4 +1,4 @@
-package com.ronaldo.codex.api.inicio;
+package com.ronaldo.codex.api.ast;
 
 import com.ronaldo.codex.api.bloque.maior.BloqueMaior;
 import com.ronaldo.codex.api.bloque.munera.BloqueMunera;
@@ -30,11 +30,22 @@ public class Ast extends Nodo {
         if (this.bloqueVariables != null) {
             this.bloqueVariables.verificarSemantica(semantica);
         }
-        if(this.bloqueMunera != null){
+        if (this.bloqueMunera != null) {
             this.bloqueMunera.verificarSemantica(semantica);
         }
         this.bloqueMaior.verificarSemantica(semantica);
 
+    }
+
+    @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        if (this.bloqueVariables != null) {
+            this.bloqueVariables.realizarTraduccion(sb);
+        }
+        if (this.bloqueMunera != null) {
+            this.bloqueMunera.realizarTraduccion(sb);
+        }
+        this.bloqueMaior.realizarTraduccion(sb);
     }
 
     public BloqueVariables getBloqueVariables() {

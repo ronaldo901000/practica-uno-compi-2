@@ -5,4 +5,5 @@ export interface Respuesta {
     hayErrores: boolean;
     errores: ErrorAnalisis[];
     tablaSimbolos:Simbolo[];
+    traduccionPigLatin:string;
 }

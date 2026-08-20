@@ -21,6 +21,11 @@ public class ElementoTerminal extends Expresion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append(valor.toString());
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         this.tipoResultado = this.tipo;
     }

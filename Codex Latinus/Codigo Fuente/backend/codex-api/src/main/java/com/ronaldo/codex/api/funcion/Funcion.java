@@ -27,6 +27,48 @@ public abstract class Funcion extends Nodo {
         this.instrucciones = new ArrayList<>();
     }
 
+    public void traducirParametros(StringBuffer sb) {
+        if (parametros.isEmpty()) {
+            return;
+        }
+
+        for (int i = 0; i < parametros.size(); i++) {
+            ParametroCreacion param = parametros.get(i);
+            param.realizarTraduccion(sb);
+
+            if (i < parametros.size() - 1) {
+                sb.append(", ");
+            }
+        }
+    }
+
+    public void traducirSeccionVariables(StringBuffer sb) {
+        if (variables.isEmpty()) {
+            return;
+        }
+
+        sb.append("ARIABILESVay [\n");
+        for (Declaracion dec : variables) {
+            sb.append("\t");
+            dec.realizarTraduccion(sb);
+            sb.append("\n");
+
+        }
+        sb.append("] \n");
+    }
+
+    protected void traducirInstruccionesInternas(StringBuffer sb) {
+        if (!this.instrucciones.isEmpty()) {
+
+            for (Instruccion inst : this.instrucciones) {
+                sb.append("\t");
+                inst.realizarTraduccion(sb);
+                sb.append("\n");
+            }
+
+        }
+    }
+
     public String getId() {
         return id;
     }

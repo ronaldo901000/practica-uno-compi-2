@@ -24,6 +24,11 @@ public class Asignacion extends Instruccion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb){
+        
+    }
+    
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         String ambitoActual = semantica.ambitoActual();
 

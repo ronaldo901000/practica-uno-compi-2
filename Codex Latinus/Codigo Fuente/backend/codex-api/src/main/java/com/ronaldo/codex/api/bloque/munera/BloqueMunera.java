@@ -28,6 +28,22 @@ public class BloqueMunera extends Nodo {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        if (funciones.isEmpty()) {
+            return;
+        }
+
+        sb.append(traductor.traducir("MUNERA>")).append("\n");
+
+        for (Funcion fun : funciones) {
+            fun.realizarTraduccion(sb);
+            sb.append("\n");
+        }
+
+        sb.append("\n");
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         for (Funcion fun : funciones) {
             if (fun != null) {

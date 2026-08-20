@@ -33,6 +33,33 @@ public class DeclaracionArray extends Declaracion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("eriessay ");
+        sb.append(traductor.traducir(id));
+        sb.append(" ");
+        sb.append("[").append(tamaño).append("]");
+        sb.append(" : ");
+        sb.append(tipo.getText()).append(" ");
+
+        if (!valores.isEmpty()) {
+            sb.append("{");
+            for (int i = 0; i < valores.size(); i++) {
+                Expresion e = valores.get(i);
+
+                e.realizarTraduccion(sb);
+
+                if (i < valores.size() - 1) {
+                    sb.append(", ");
+                }
+
+            }
+            sb.append("}");
+        }
+        sb.append("; ");
+
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         String ambitoActual = semantica.ambitoActual();
 

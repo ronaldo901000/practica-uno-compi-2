@@ -15,6 +15,19 @@ public class CicloDoWhile extends Ciclo {
     public CicloDoWhile(Condicion condicion, int fila, int columna) {
         super(condicion, fila, columna);
     }
+    
+    @Override
+    public void realizarTraduccion(StringBuffer sb){
+        sb.append("acerefay { \n");
+        
+        traducirInstruccionesInternas(sb);
+        
+        sb.append("} umday (");
+        condicion.realizarTraduccion(sb);
+        sb.append(");");
+        
+    }
+    
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {

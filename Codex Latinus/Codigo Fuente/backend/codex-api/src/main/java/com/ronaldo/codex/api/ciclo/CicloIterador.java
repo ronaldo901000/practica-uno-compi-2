@@ -1,6 +1,7 @@
 package com.ronaldo.codex.api.ciclo;
 
 import com.ronaldo.codex.api.condicion.Condicion;
+import com.ronaldo.codex.api.declaracion.DeclaracionVariable;
 import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorSemantico;
 import com.ronaldo.codex.api.enums.Tipo;
 import com.ronaldo.codex.api.expresion.Expresion;
@@ -14,15 +15,39 @@ import java.util.List;
  */
 public class CicloIterador extends Ciclo {
 
-    private Expresion expresionInterador;
+    private Expresion expresionIterador;
+    private DeclaracionVariable valor;
 
-    public CicloIterador(Expresion expresionInterador, Condicion condicion, int fila, int columna) {
+    public CicloIterador(DeclaracionVariable valor, Expresion expresionIterador, Condicion condicion, int fila, int columna) {
         super(condicion, fila, columna);
-        this.expresionInterador = expresionInterador;
+        this.valor = valor;
+        this.expresionIterador = expresionIterador;
     }
 
-@Override
+    @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("erpay (");
+
+        valor.realizarTraduccion(sb);
+        sb.append(" ");
+        condicion.realizarTraduccion(sb);
+        sb.append(" ");
+        expresionIterador.realizarTraduccion(sb);
+        sb.append(") { \n");
+
+        traducirInstruccionesInternas(sb);
+        sb.append("} \n");
+
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
+
+        semantica.entrarAmbito("ciclo-iterador");
+
+        if (valor != null) {
+            this.valor.verificarSemantica(semantica);
+        }
 
         if (this.getCondicion() != null) {
             this.getCondicion().verificarSemantica(semantica);
@@ -31,16 +56,16 @@ public class CicloIterador extends Ciclo {
 
             if (tipoCondicion != Tipo.ERROR && tipoCondicion != Tipo.BOOLEANO) {
                 semantica.getErrores().add(new ErrorSemantico(
-                    getFila(),
-                    getColumna(),
-                    "for",
-                    "La condicion del ciclo debe ser de tipo BOOLEANO, pero se recibio " + tipoCondicion
+                        getFila(),
+                        getColumna(),
+                        "for",
+                        "La condicion del ciclo debe ser de tipo BOOLEANO, pero se recibio " + tipoCondicion
                 ));
             }
         }
 
-        if (this.expresionInterador != null) {
-            this.expresionInterador.verificarSemantica(semantica);
+        if (this.expresionIterador != null) {
+            this.expresionIterador.verificarSemantica(semantica);
         }
 
         if (this.instruccionesInternas != null) {
@@ -51,14 +76,15 @@ public class CicloIterador extends Ciclo {
             }
         }
 
+        semantica.salirAmbito();
     }
 
     public Expresion getExpresionInterador() {
-        return expresionInterador;
+        return expresionIterador;
     }
 
     public void setExpresionInterador(Expresion expresionInterador) {
-        this.expresionInterador = expresionInterador;
+        this.expresionIterador = expresionInterador;
     }
 
     public Condicion getCondicion() {
@@ -75,6 +101,22 @@ public class CicloIterador extends Ciclo {
 
     public void setInstruccionesInternas(List<Instruccion> instruccionesInternas) {
         this.instruccionesInternas = instruccionesInternas;
+    }
+
+    public Expresion getExpresionIterador() {
+        return expresionIterador;
+    }
+
+    public void setExpresionIterador(Expresion expresionIterador) {
+        this.expresionIterador = expresionIterador;
+    }
+
+    public DeclaracionVariable getValor() {
+        return valor;
+    }
+
+    public void setValor(DeclaracionVariable valor) {
+        this.valor = valor;
     }
 
 }

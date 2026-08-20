@@ -13,20 +13,30 @@ import com.ronaldo.codex.api.semantica.Semantica;
  */
 public class Condicion extends Nodo {
 
-    private Object valorUno;
-    private Object valorDos;
+    private Expresion valorUno;
+    private Expresion valorDos;
     private TipoCondicion tipo;
     private Tipo tipoResultado;
 
-    public Condicion(Object valorUno, Object valorDos, TipoCondicion tipo, int fila, int columna) {
+    public Condicion(Expresion valorUno, Expresion valorDos, TipoCondicion tipo, int fila, int columna) {
         super(fila, columna);
         this.valorUno = valorUno;
         this.valorDos = valorDos;
         this.tipo = tipo;
     }
 
-    public Condicion(Object valorUno, TipoCondicion tipo, int fila, int columna) {
+    public Condicion(Expresion valorUno, TipoCondicion tipo, int fila, int columna) {
         this(valorUno, null, tipo, fila, columna);
+    }
+
+    @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        valorDos.realizarTraduccion(sb);
+        sb.append(" ").append(tipo.getOperador()).append(" ");
+        if (valorDos != null) {
+            valorDos.realizarTraduccion(sb);
+        }
+
     }
 
     @Override
@@ -34,10 +44,8 @@ public class Condicion extends Nodo {
         Tipo tipoUno = Tipo.ERROR;
         Tipo tipoDos = Tipo.ERROR;
 
-        if (this.valorUno instanceof Nodo) {
-            ((Nodo) this.valorUno).verificarSemantica(semantica);
-            tipoUno = obtenerTipoResultado(this.valorUno);
-        }
+        this.valorUno.verificarSemantica(semantica);
+        tipoUno = valorUno.getTipoResultado();
 
         if (tipoUno == Tipo.ERROR) {
             this.tipoResultado = Tipo.ERROR;
@@ -60,10 +68,8 @@ public class Condicion extends Nodo {
             return;
         }
 
-        if (this.valorDos instanceof Nodo) {
-            ((Nodo) this.valorDos).verificarSemantica(semantica);
-            tipoDos = obtenerTipoResultado(this.valorDos);
-        }
+        this.valorDos.verificarSemantica(semantica);
+        tipoDos = valorDos.getTipoResultado();
 
         if (tipoDos == Tipo.ERROR) {
             this.tipoResultado = Tipo.ERROR;
@@ -99,15 +105,6 @@ public class Condicion extends Nodo {
         this.tipoResultado = Tipo.BOOLEANO;
     }
 
-    private Tipo obtenerTipoResultado(Object nodo) {
-        if (nodo instanceof Expresion) {
-            return ((Expresion) nodo).getTipoResultado();
-        } else if (nodo instanceof Condicion) {
-            return ((Condicion) nodo).getTipoResultado();
-        }
-        return Tipo.ERROR;
-    }
-
     private boolean esOperadorLogico(TipoCondicion tipoOp) {
         return tipoOp == TipoCondicion.AND || tipoOp == TipoCondicion.OR;
     }
@@ -131,15 +128,15 @@ public class Condicion extends Nodo {
         return valorUno;
     }
 
-    public void setValorUno(Object valorUno) {
+    public void setValorUno(Expresion valorUno) {
         this.valorUno = valorUno;
     }
 
-    public Object getValorDos() {
+    public Expresion getValorDos() {
         return valorDos;
     }
 
-    public void setValorDos(Object valorDos) {
+    public void setValorDos(Expresion valorDos) {
         this.valorDos = valorDos;
     }
 

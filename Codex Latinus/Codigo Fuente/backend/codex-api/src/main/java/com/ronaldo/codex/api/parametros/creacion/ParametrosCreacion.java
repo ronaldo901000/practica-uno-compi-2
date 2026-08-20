@@ -24,6 +24,22 @@ public class ParametrosCreacion extends Nodo {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        if (parametros.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < parametros.size(); i++) {
+            ParametroCreacion p = parametros.get(i);
+            p.realizarTraduccion(sb);
+            if (i < parametros.size() - 1) {
+                sb.append(", ");
+            }
+
+        }
+
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         if (this.parametros == null || this.parametros.isEmpty()) {
             return;

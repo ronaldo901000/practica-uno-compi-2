@@ -22,6 +22,14 @@ public class AccesoArray extends Expresion {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append(traductor.traducir(id));
+        sb.append(" [");
+        sb.append(posicion);
+        sb.append("] ");
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         String ambitoActual = semantica.ambitoActual();
 

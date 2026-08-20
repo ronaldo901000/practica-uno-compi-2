@@ -6,7 +6,7 @@ import com.ronaldo.codex.api.dto.entrada.EntradaDTO;
 import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorAnalisis;
 import com.ronaldo.codex.api.dto.respuesta.RespuestaDTO;
 import com.ronaldo.codex.api.exceptions.EntradaException;
-import com.ronaldo.codex.api.inicio.Ast;
+import com.ronaldo.codex.api.ast.Ast;
 import com.ronaldo.codex.api.listeners.ErrorLexicoListener;
 import com.ronaldo.codex.api.listeners.ErrorSintacticoListener;
 import com.ronaldo.codex.api.semantica.Semantica;
@@ -56,7 +56,7 @@ public class Analizador {
         if (hayErrores() || parser.getNumberOfSyntaxErrors() > 0) {
             respuesta.setErrores(this.errores);
             respuesta.setHayErrores(true);
-            return respuesta; 
+            return respuesta;
         }
 
         //recorrido del arbol
@@ -73,6 +73,12 @@ public class Analizador {
         } else {
             CreadorTablaSimbolosDTO creador = new CreadorTablaSimbolosDTO();
             respuesta.setTablaSimbolos(creador.crear(semantica));
+
+            //Generacion de la traduccion al lenguaje pig latin
+            StringBuffer sb = new StringBuffer();
+            ast.realizarTraduccion(sb);
+
+            respuesta.setTraduccionPigLatin(sb.toString());
         }
 
         return respuesta;

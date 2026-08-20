@@ -24,14 +24,28 @@ public class FuncionVoid extends Funcion {
     }
 
     @Override
-    public void verificarSemantica(Semantica semantica) throws PilaException {
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append("actioway ");
+        sb.append(traductor.traducir(id)).append("(");
+        
+        traducirParametros(sb);
+        sb.append(") \n").append("{").append("\n");
+        traducirSeccionVariables(sb);
+        traducirInstruccionesInternas(sb);
 
-        if (semantica.getTablaSimbolos().buscar(this.id, "global") != null) {
+        sb.append("} inisfay;\n");
+
+    }
+
+    @Override
+    public void verificarSemantica(Semantica semantica) throws PilaException, Exception {
+
+        if (semantica.getTablaSimbolos().buscar(this.id, semantica.GLOBAL) != null) {
             semantica.getErrores().add(new ErrorSemantico(
                     getFila(),
                     getColumna(),
                     this.id,
-                    "La función o método '" + this.id + "' ya ha sido definido previamente."
+                    "La funcion '" + this.id + "' ya ha sido definida anteriormente."
             ));
             return;
         }
@@ -56,46 +70,30 @@ public class FuncionVoid extends Funcion {
 
         semantica.entrarAmbito(this.id);
 
-        try {
-
-            if (this.parametros != null) {
-                for (ParametroCreacion param : this.parametros) {
-                    if (param != null) {
-                        try {
-                            param.verificarSemantica(semantica);
-                        } catch (Exception e) {
-
-                        }
-                    }
+        if (this.parametros != null) {
+            for (ParametroCreacion param : this.parametros) {
+                if (param != null) {
+                    param.verificarSemantica(semantica);
                 }
             }
-
-            if (this.variables != null) {
-                for (Declaracion dec : this.variables) {
-                    if (dec != null) {
-                        try {
-                            dec.verificarSemantica(semantica);
-                        } catch (Exception e) {
-
-                        }
-                    }
-                }
-            }
-
-            if (this.instrucciones != null) {
-                for (Instruccion inst : this.instrucciones) {
-                    if (inst != null) {
-                        try {
-                            inst.verificarSemantica(semantica);
-                        } catch (Exception e) {
-
-                        }
-                    }
-                }
-            }
-
-        } finally {
-            semantica.salirAmbito();
         }
+
+        if (this.variables != null) {
+            for (Declaracion dec : this.variables) {
+                if (dec != null) {
+                    dec.verificarSemantica(semantica);
+                }
+            }
+        }
+
+        if (this.instrucciones != null) {
+            for (Instruccion inst : this.instrucciones) {
+                if (inst != null) {
+                    inst.verificarSemantica(semantica);
+                }
+            }
+        }
+
+        semantica.salirAmbito();
     }
 }

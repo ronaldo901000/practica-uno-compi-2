@@ -11,22 +11,22 @@ import java.util.List;
  * @author ronaldo
  */
 public class BloqueVariables extends Nodo {
-    
+
     private List<Declaracion> declaraciones;
-    
+
     public BloqueVariables(int fila, int columna) {
         super(fila, columna);
         this.declaraciones = new ArrayList<>();
     }
-    
+
     public List<Declaracion> getDeclaraciones() {
         return declaraciones;
     }
-    
+
     public void setDeclaraciones(List<Declaracion> declaraciones) {
         this.declaraciones = declaraciones;
     }
-    
+
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         for (int i = 0; i < declaraciones.size(); i++) {
@@ -36,5 +36,22 @@ public class BloqueVariables extends Nodo {
             }
         }
     }
-    
+
+    @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        if (declaraciones.isEmpty()) {
+            return;
+        }
+
+        sb.append("ARIABILES>Vay\n");
+        for (Declaracion dec : declaraciones) {
+            if (dec != null) {
+                dec.realizarTraduccion(sb);
+                sb.append("\n");
+            }
+        }
+        sb.append("\n");
+
+    }
+
 }

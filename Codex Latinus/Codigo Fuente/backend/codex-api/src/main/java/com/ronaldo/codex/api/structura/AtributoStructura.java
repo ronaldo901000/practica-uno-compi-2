@@ -28,6 +28,13 @@ public class AtributoStructura extends Nodo {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        sb.append(traductor.traducir(estructura.getNombreEnMinusculas()));
+        sb.append(" ").append(traductor.traducir(id)).append(" : ").
+                append(traductor.traducir(tipoDato)).append(";");
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         if (!semantica.getTablaTipos().existeTipo(this.tipoDato)) {
             this.tipoResultado = Tipo.ERROR;

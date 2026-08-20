@@ -20,6 +20,19 @@ public class AtributosStructura extends Nodo {
     }
 
     @Override
+    public void realizarTraduccion(StringBuffer sb) {
+        if (this.atributos == null || this.atributos.isEmpty()) {
+            return;
+        }
+
+        for (AtributoStructura atributo : atributos) {
+            sb.append("\t");
+            atributo.realizarTraduccion(sb);
+            sb.append("\n");
+        }
+    }
+
+    @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         if (this.atributos == null || this.atributos.isEmpty()) {
             return;
