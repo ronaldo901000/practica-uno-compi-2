@@ -40,7 +40,7 @@ public class Semantica {
         }
     }
 
-    public String ambitoActual() {
+    public String getAmbitoActual() {
         return this.pilaAmbitos.getTope();
     }
 

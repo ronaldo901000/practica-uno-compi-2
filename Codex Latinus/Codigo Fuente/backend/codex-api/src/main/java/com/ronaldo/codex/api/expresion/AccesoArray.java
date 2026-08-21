@@ -31,7 +31,7 @@ public class AccesoArray extends Expresion {
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        String ambitoActual = semantica.ambitoActual();
+        String ambitoActual = semantica.getAmbitoActual();
 
         Simbolo simbolo = semantica.getTablaSimbolos().buscar(this.id, ambitoActual);
 

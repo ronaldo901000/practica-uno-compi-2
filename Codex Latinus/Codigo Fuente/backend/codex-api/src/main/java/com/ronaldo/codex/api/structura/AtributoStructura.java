@@ -24,7 +24,7 @@ public class AtributoStructura extends Nodo {
         this.tipoDato = tipoDato;
 
         VerificadorTipos vt = new VerificadorTipos();
-        this.estructura = vt.verificarEstructuraDato(id);
+        this.estructura = vt.verificarEstructuraDato(estructuraCadena);
     }
 
     @Override
@@ -36,6 +36,7 @@ public class AtributoStructura extends Nodo {
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
+
         if (!semantica.getTablaTipos().existeTipo(this.tipoDato)) {
             this.tipoResultado = Tipo.ERROR;
             semantica.getErrores().add(new ErrorSemantico(

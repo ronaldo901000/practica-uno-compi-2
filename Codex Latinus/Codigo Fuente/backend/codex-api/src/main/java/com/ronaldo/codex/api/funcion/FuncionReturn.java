@@ -52,7 +52,7 @@ public class FuncionReturn extends Funcion {
     @Override
     public void verificarSemantica(Semantica semantica) throws PilaException, Exception {
 
-        //Verifica que no exista una función con el mismo ID en el ambito global
+        //Verifica que no exista una funcion con el mismo ID en el ambito global
         if (semantica.getTablaSimbolos().buscar(this.id, semantica.getGLOBAL()) != null) {
             semantica.getErrores().add(new ErrorSemantico(
                     getFila(),
@@ -116,7 +116,7 @@ public class FuncionReturn extends Funcion {
         //Validar el identificador de retorno y su tipo
         if (this.idRetorno != null) {
 
-            Simbolo simRetorno = semantica.getTablaSimbolos().buscar(this.idRetorno, semantica.ambitoActual());
+            Simbolo simRetorno = semantica.getTablaSimbolos().buscar(this.idRetorno, semantica.getAmbitoActual());
 
             if (simRetorno == null) {
                 simRetorno = semantica.getTablaSimbolos().buscar(this.idRetorno, semantica.GLOBAL);

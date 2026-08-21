@@ -35,20 +35,22 @@ public class DeclaracionVariable extends Declaracion {
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
-        String ambitoActual = semantica.ambitoActual();
+        String ambitoActual = semantica.getAmbitoActual();
 
-        // 1. Validar si la variable ya fue declarada en el ámbito
-        if (semantica.getTablaSimbolos().existeEnAmbitoActual(this.id, ambitoActual)) {
+        //Validar si la variable ya fue declarada en el ambito actual
+        if (semantica.getTablaSimbolos().existeEnAmbitoActual(
+                this.id, ambitoActual)) {
+
             semantica.getErrores().add(new ErrorSemantico(
                     fila,
                     columna,
                     id,
-                    "La variable '" + this.id + "' ya existe en el ambito: " + ambitoActual
+                    "La variable '" + this.id
+                    + "' ya existe en el ambito: " + ambitoActual
             ));
         }
 
-        // 2. REGISTRAR SIEMPRE EL SÍMBOLO (incluso si la expresión tiene errores)
-        // Se usa EL TIPO DECLARADO (this.tipo), NUNCA el tipo de la expresión.
+        //Insercion del simbolo a la tabla de simbolos
         Simbolo nuevoSimbolo = new Simbolo();
         nuevoSimbolo.setLlave(new Llave(this.id, ambitoActual));
         nuevoSimbolo.setCategoria(Categoria.VAR);
@@ -67,7 +69,8 @@ public class DeclaracionVariable extends Declaracion {
                             fila,
                             columna,
                             id,
-                            "No se puede asignar " + tipoValor + " a una variable de tipo " + this.tipo
+                            "No se puede asignar " + tipoValor
+                            + " a una variable de tipo " + this.tipo
                     ));
                 }
             }

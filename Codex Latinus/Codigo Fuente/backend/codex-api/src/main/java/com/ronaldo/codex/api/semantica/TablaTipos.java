@@ -42,6 +42,10 @@ public class TablaTipos {
         tipos.add(e);
     }
 
+    public void agregarTipo(ElementoTablaTipos elemento) {
+        this.tipos.add(elemento);
+    }
+
     public boolean existeTipo(String nombreTipo) {
         if (this.tipos != null) {
             for (ElementoTablaTipos elemento : this.tipos) {
@@ -73,6 +77,20 @@ public class TablaTipos {
             }
         }
         return "-";
+    }
+
+    public ElementoTablaTipos getTipoPorNombre(String nombre) {
+        if (nombre == null || this.tipos == null) {
+            return null;
+        }
+
+        for (ElementoTablaTipos tipo : this.tipos) {
+            if (tipo.getNombre() != null && tipo.getNombre().equalsIgnoreCase(nombre)) {
+                return tipo;
+            }
+        }
+
+        return null;
     }
 
 }

@@ -31,7 +31,7 @@ public class OperadorAbreviado extends Expresion {
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        String ambitoActual = semantica.ambitoActual();
+        String ambitoActual = semantica.getAmbitoActual();
 
         Simbolo variable = semantica.getTablaSimbolos().buscar(this.id, ambitoActual);
 

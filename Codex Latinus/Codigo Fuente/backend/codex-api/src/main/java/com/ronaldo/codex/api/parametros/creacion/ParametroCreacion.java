@@ -57,7 +57,7 @@ public class ParametroCreacion extends Nodo {
             return;
         }
 
-        String ambitoActual = semantica.ambitoActual();
+        String ambitoActual = semantica.getAmbitoActual();
 
         int idTipoNumerico = semantica.getTablaTipos().obtenerIdTipo(this.tipo.getText());
 

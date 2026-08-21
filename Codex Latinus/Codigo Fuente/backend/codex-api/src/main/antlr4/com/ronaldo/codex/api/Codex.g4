@@ -16,6 +16,7 @@ variable:
     variable_simple
     | variable_compuesta
     | dec_structura
+    | constr_structura
     ;
 
 /**TIPO DE DATOS SIMPLES Y CADENAS**/
@@ -60,7 +61,7 @@ valores_ini_array
 
 /**Declaracion**/
 dec_structura
-    : STRUCTURA ID LLAVE_A atributos LLAVE_C FINIS P_COMA
+    : STRUCTURA ID_STRUCT LLAVE_A atributos LLAVE_C FINIS P_COMA
     ;
 
 atributos
@@ -79,12 +80,13 @@ tipo
 
 tipo_dato_atributo
     : tipo_dato
+    | ID_STRUCT
     | ID
     ;
 
 /**construccion de la estructura**/
 constr_structura
-    : ESTO ID P_COMA ID LLAVE_A elementos_construccion  LLAVE_C
+    : ESTO ID DOS_P ID_STRUCT LLAVE_A elementos_construccion  LLAVE_C
     ;
 
 elementos_construccion
@@ -93,7 +95,12 @@ elementos_construccion
     ;
 
 ele_construccion
-    : ID DOS_P tipo_dato_atributo tamaño_array
+    : ID DOS_P valor_elem_construccion tamaño_array
+    ;
+
+valor_elem_construccion
+    : expresion
+    | ID_STRUCT tamaño_array
     ;
 
 tamaño_array
@@ -356,6 +363,7 @@ PAR_A:  '(';
 PAR_C:  ')';
 
 //expresiones regulares
+ID_STRUCT: [A-Z][a-zA-Z0-9_]* ;
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 ENTERO: [0-9]+ ;
 DECIMAL: [0-9]+ '.' [0-9]+;

@@ -33,7 +33,7 @@ public class LlamadaFuncion extends Expresion {
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        String ambitoActual = semantica.ambitoActual();
+        String ambitoActual = semantica.getAmbitoActual();
 
         Simbolo funcion = semantica.getTablaSimbolos().buscar(id, ambitoActual);
 

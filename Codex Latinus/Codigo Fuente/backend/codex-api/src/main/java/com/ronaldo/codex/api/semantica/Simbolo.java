@@ -17,6 +17,7 @@ public class Simbolo {
     private int numeroParams;
     private int tamañoArray;
     private List<String> listaParams;
+    private List<String> atributos;
 
     public Simbolo(String nombre, String ambito, Categoria categoria, int idTipo, int fila, int columna) {
         this.llave = new Llave(nombre, ambito);
@@ -97,5 +98,15 @@ public class Simbolo {
     public void setListaParams(List<String> listaParams) {
         this.listaParams = listaParams;
     }
+
+    public List<String> getAtributos() {
+        return atributos;
+    }
+
+    public void setAtributos(List<String> atributos) {
+        this.atributos = atributos;
+    }
+    
+    
 
 }

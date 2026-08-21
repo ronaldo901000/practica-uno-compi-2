@@ -17,6 +17,8 @@ public class CreadorTablaSimbolosDTO {
         List<SimboloDTO> lista = new ArrayList<>();
 
         for (Simbolo s : semantica.getTablaSimbolos().getTablaSimbolos()) {
+            
+            
             SimboloDTO sim = new SimboloDTO();
             sim.setId(s.getLlave().getId());
             sim.setAlcance(s.getLlave().getAmbito());

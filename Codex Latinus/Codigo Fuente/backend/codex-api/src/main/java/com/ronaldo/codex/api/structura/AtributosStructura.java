@@ -2,7 +2,9 @@ package com.ronaldo.codex.api.structura;
 
 import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorSemantico;
 import com.ronaldo.codex.api.nodo.Nodo;
+import com.ronaldo.codex.api.semantica.DeclaracionAtributoStructura;
 import com.ronaldo.codex.api.semantica.Semantica;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +19,7 @@ public class AtributosStructura extends Nodo {
 
     public AtributosStructura(int fila, int columna) {
         super(fila, columna);
+        atributos = new ArrayList<>();
     }
 
     @Override
@@ -49,13 +52,36 @@ public class AtributosStructura extends Nodo {
                             atr.getFila(),
                             atr.getColumna(),
                             atr.getId(),
-                            "Atributo duplicado '" + atr.getId() + "' dentro de la declaracion del struct."
+                            "Atributo duplicado '" + atr.getId()
+                            + "' dentro de la declaracion del struct."
                     ));
                 } else {
                     idsUnicos.add(atr.getId());
                 }
             }
         }
+    }
+
+    public List<DeclaracionAtributoStructura> obtenerAtributosSemanticos(Semantica semantica) {
+
+        List<DeclaracionAtributoStructura> listaSemantica = new ArrayList<>();
+
+        if (this.atributos != null) {
+            for (AtributoStructura atr : this.atributos) {
+                int idTipo = semantica.getTablaTipos().obtenerIdTipo(atr.getTipoDato());
+
+                DeclaracionAtributoStructura decl = new DeclaracionAtributoStructura(
+                        atr.getId(),
+                        atr.getEstructura(),
+                        atr.getTipoDato(),
+                        idTipo
+                );
+
+                listaSemantica.add(decl);
+            }
+        }
+
+        return listaSemantica;
     }
 
     public List<AtributoStructura> getAtributos() {

@@ -32,7 +32,7 @@ public class FuncionLecturaGuardado extends FuncionEspecial {
             return;
         }
 
-        Simbolo simbolo = semantica.getTablaSimbolos().buscar(this.id, semantica.ambitoActual());
+        Simbolo simbolo = semantica.getTablaSimbolos().buscar(this.id, semantica.getAmbitoActual());
         if (simbolo == null) {
             simbolo = semantica.getTablaSimbolos().buscar(this.id, semantica.getGLOBAL());
         }

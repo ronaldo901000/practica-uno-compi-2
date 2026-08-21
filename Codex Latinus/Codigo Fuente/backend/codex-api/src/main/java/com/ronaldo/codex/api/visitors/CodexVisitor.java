@@ -49,6 +49,8 @@ import com.ronaldo.codex.api.services.verificacion.VerificadorTipos;
 import com.ronaldo.codex.api.structura.AtributoStructura;
 import com.ronaldo.codex.api.structura.AtributosStructura;
 import com.ronaldo.codex.api.structura.DeclaracionStructura;
+import com.ronaldo.codex.api.structura.construccion.ConstruccionStruct;
+import com.ronaldo.codex.api.structura.construccion.ElementoConstruccionStruct;
 import java.util.List;
 
 /**
@@ -90,6 +92,10 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             return (DeclaracionVariable) visit(ctx.variable_simple());
         } else if (ctx.variable_compuesta() != null) {
             return (DeclaracionArray) visit(ctx.variable_compuesta());
+        } else if (ctx.dec_structura() != null) {
+            return (DeclaracionStructura) visit(ctx.dec_structura());
+        } else if (ctx.constr_structura() != null) {
+            return (ConstruccionStruct) visit(ctx.constr_structura());
         }
         return null;
     }
@@ -186,7 +192,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
     public DeclaracionStructura visitDec_structura(CodexParser.Dec_structuraContext ctx) {
         int fila = ctx.start.getLine();
         int colulmna = ctx.start.getCharPositionInLine();
-        String id = ctx.ID().getText();
+        String id = ctx.ID_STRUCT().getText();
         AtributosStructura atributos = (AtributosStructura) visit(ctx.atributos());
 
         return new DeclaracionStructura(id, atributos, fila, colulmna);
@@ -218,11 +224,12 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         }
 
         if (ctx.atributo() != null) {
-            AtributoStructura atributo = visitAtributo(ctx.atributo());
+            AtributoStructura atributo = (AtributoStructura) visit(ctx.atributo());
             if (atributo != null) {
                 contenedor.getAtributos().add(atributo);
             }
         }
+
     }
 
     @Override
@@ -231,28 +238,23 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         int columna = ctx.start.getCharPositionInLine();
         String estructura = ctx.tipo().getText();
         String id = ctx.ID().getText();
-        String tipoDato = ctx.tipo_dato_atributo().getText();
+        String tipoDato;
+
+        if (ctx.tipo_dato_atributo().tipo_dato() != null) {
+            tipoDato = ctx.tipo_dato_atributo().tipo_dato().getText();
+        } else if (ctx.tipo_dato_atributo().ID() != null) {
+            tipoDato = ctx.tipo_dato_atributo().ID().getText();
+        } else {
+            tipoDato = ctx.tipo_dato_atributo().ID_STRUCT().getText();
+        }
 
         return new AtributoStructura(id, tipoDato, fila, columna, estructura);
     }
 
 
     /*
-    
-    @Override
-    public T visitConstr_structura(CodexParser.Constr_structuraContext ctx) {
-        return visitChildren(ctx);
-    }
+   
 
-    @Override
-    public T visitElementos_construccion(CodexParser.Elementos_construccionContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public T visitEle_construccion(CodexParser.Ele_construccionContext ctx) {
-        return visitChildren(ctx);
-    }
 
     @Override
     public T visitAsig_atributo_array(CodexParser.Asig_atributo_arrayContext ctx) {
@@ -265,6 +267,75 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
     }
 
      */
+    @Override
+    public ConstruccionStruct visitConstr_structura(CodexParser.Constr_structuraContext ctx) {
+
+        int fila = ctx.start.getLine();
+        int columna = ctx.start.getCharPositionInLine();
+
+        String idVariable = ctx.ID().getText();
+
+        String tipoStruct = ctx.ID_STRUCT().getText();
+
+        ConstruccionStruct struct = new ConstruccionStruct(tipoStruct, fila, columna);
+        struct.setId(idVariable);
+
+        if (ctx.elementos_construccion() != null) {
+            recolectarElementosConstruccion(ctx.elementos_construccion(), struct);
+        }
+
+        return struct;
+    }
+
+    private void recolectarElementosConstruccion(CodexParser.Elementos_construccionContext ctx, ConstruccionStruct struct) {
+        if (ctx == null) {
+            return;
+        }
+
+        if (ctx.elementos_construccion() != null) {
+            recolectarElementosConstruccion(ctx.elementos_construccion(), struct);
+        }
+
+        if (ctx.ele_construccion() != null) {
+            ElementoConstruccionStruct elemento = visitEle_construccion(ctx.ele_construccion());
+            if (elemento != null) {
+                struct.insertarElementoConstruccion(elemento);
+            }
+        }
+    }
+
+    @Override
+    public ElementoConstruccionStruct visitEle_construccion(CodexParser.Ele_construccionContext ctx) {
+        String id = ctx.ID().getText();
+        int fila = ctx.start.getLine();
+        int columna = ctx.start.getCharPositionInLine();
+
+        Expresion valorExpresion = null;
+        String tipoDato = null;
+        int tamañoArray = 0;
+        boolean esArray = false;
+
+        CodexParser.Valor_elem_construccionContext valorCtx = ctx.valor_elem_construccion();
+
+        if (valorCtx.expresion() != null) {
+            valorExpresion = (Expresion) visit(valorCtx.expresion());
+        } else if (valorCtx.ID_STRUCT() != null) {
+            tipoDato = valorCtx.ID_STRUCT().getText();
+
+            if (valorCtx.tamaño_array() != null && valorCtx.tamaño_array().ENTERO() != null) {
+                esArray = true;
+                tamañoArray = Integer.parseInt(valorCtx.tamaño_array().ENTERO().getText());
+            }
+        }
+
+        if (!esArray && ctx.tamaño_array() != null && ctx.tamaño_array().ENTERO() != null) {
+            esArray = true;
+            tamañoArray = Integer.parseInt(ctx.tamaño_array().ENTERO().getText());
+        }
+
+        return new ElementoConstruccionStruct(id, tipoDato, valorExpresion, tamañoArray, esArray, fila, columna);
+    }
+
     @Override
     public Asignacion visitAsignacion(CodexParser.AsignacionContext ctx) {
         int fila = ctx.ID().getSymbol().getLine();
@@ -620,11 +691,10 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
     public CicloIterador visitCiclo_iterador(CodexParser.Ciclo_iteradorContext ctx) {
         int fila = ctx.PER().getSymbol().getLine();
         int columna = ctx.PER().getSymbol().getCharPositionInLine();
-        
+
         DeclaracionVariable valor = (DeclaracionVariable) visit(ctx.dec_var());
         Condicion condicion = (Condicion) visit(ctx.condicion());
         Expresion expresionIterador = (Expresion) visit(ctx.expresion_iterador());
-        
 
         CicloIterador cicloIterador = new CicloIterador(
                 valor,

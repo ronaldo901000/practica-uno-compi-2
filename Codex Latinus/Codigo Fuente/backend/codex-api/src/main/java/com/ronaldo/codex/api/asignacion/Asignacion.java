@@ -30,7 +30,7 @@ public class Asignacion extends Instruccion {
     
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        String ambitoActual = semantica.ambitoActual();
+        String ambitoActual = semantica.getAmbitoActual();
 
         Simbolo variable = semantica.getTablaSimbolos().buscar(this.id, ambitoActual);
         if (variable == null) {

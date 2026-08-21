@@ -61,7 +61,7 @@ public class DeclaracionArray extends Declaracion {
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        String ambitoActual = semantica.ambitoActual();
+        String ambitoActual = semantica.getAmbitoActual();
 
         //Validar si ya existe en el ambito actual
         if (semantica.getTablaSimbolos().existeEnAmbitoActual(this.id, ambitoActual)) {

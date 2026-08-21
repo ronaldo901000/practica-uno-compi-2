@@ -25,7 +25,7 @@ public class AccesoVariable extends Expresion {
     
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        String ambito = semantica.ambitoActual();
+        String ambito = semantica.getAmbitoActual();
         Simbolo variable = semantica.getTablaSimbolos().buscar(id, ambito);
         
         if (variable == null) {
