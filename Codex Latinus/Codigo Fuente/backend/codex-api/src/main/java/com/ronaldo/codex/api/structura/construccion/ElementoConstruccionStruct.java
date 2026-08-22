@@ -13,8 +13,8 @@ import com.ronaldo.codex.api.semantica.Semantica;
 public class ElementoConstruccionStruct extends Nodo {
 
     private String id;
-    private String tipoDato;     
-    private Expresion valorExpresion; 
+    private String tipoDato;
+    private Expresion valorExpresion;
     private int tamañoArray;
     private boolean esArreglo;
 
@@ -30,12 +30,10 @@ public class ElementoConstruccionStruct extends Nodo {
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
-        //Si es una expresion, se evalua su semantica para que calcule el tipoResultado
         if (this.valorExpresion != null) {
             this.valorExpresion.verificarSemantica(semantica);
         }
 
-        // Si es struct se verifica que exista en la tabla de tipos
         if (this.tipoDato != null && !semantica.getTablaTipos().existeTipo(this.tipoDato)) {
             semantica.getErrores().add(new ErrorSemantico(
                     getFila(), getColumna(), this.id,
@@ -48,16 +46,22 @@ public class ElementoConstruccionStruct extends Nodo {
 
         String tipoIngresado = null;
 
-        // Extraer la cadena del tipo según la fuente de datos
         if (this.valorExpresion != null) {
-            if (this.valorExpresion.getTipoResultado() != null) {
+
+
+            if (this.valorExpresion.getNombreTipoEstructura() != null 
+                    && !this.valorExpresion.getNombreTipoEstructura().equals("-")) {
+                tipoIngresado = this.valorExpresion.getNombreTipoEstructura();
+
+
+            } else if (this.valorExpresion.getTipoResultado() != null) {
                 tipoIngresado = this.valorExpresion.getTipoResultado().name();
             }
+
         } else if (this.tipoDato != null) {
             tipoIngresado = this.tipoDato;
         }
 
-        // Control de Nulos Failsafe
         if (tipoIngresado == null) {
             semantica.getErrores().add(new ErrorSemantico(
                     getFila(), getColumna(), this.id,
@@ -66,7 +70,6 @@ public class ElementoConstruccionStruct extends Nodo {
             return;
         }
 
-        //Validar compatibilidad del tipo de dato
         if (!tipoIngresado.equalsIgnoreCase(atributoDefinicion.getTipo())) {
             semantica.getErrores().add(new ErrorSemantico(
                     getFila(), getColumna(), this.id,
@@ -75,10 +78,9 @@ public class ElementoConstruccionStruct extends Nodo {
             ));
         }
 
-        //Validar estructura de arreglo
         boolean definicionEsSerie = atributoDefinicion.esArreglo();
         if (definicionEsSerie != this.esArreglo) {
-            String esperado = definicionEsSerie ? "una serie (arreglo)" : "una variable simple (esto)";
+            String esperado = definicionEsSerie ? "una serie (arreglo)" : "una variable simple";
             String recibido = this.esArreglo ? "una serie" : "una variable simple";
 
             semantica.getErrores().add(new ErrorSemantico(
@@ -143,7 +145,5 @@ public class ElementoConstruccionStruct extends Nodo {
     public void setValorExpresion(Expresion valorExpresion) {
         this.valorExpresion = valorExpresion;
     }
-
-    
 
 }

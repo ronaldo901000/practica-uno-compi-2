@@ -2,13 +2,13 @@ package com.ronaldo.codex.api.aritmetica;
 
 import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorSemantico;
 import com.ronaldo.codex.api.enums.Tipo;
-import static com.ronaldo.codex.api.enums.Tipo.BOOLEANO;
 import static com.ronaldo.codex.api.enums.Tipo.DECIMALIS;
 import static com.ronaldo.codex.api.enums.Tipo.LITTERA;
 import static com.ronaldo.codex.api.enums.Tipo.NUMERUS;
 import static com.ronaldo.codex.api.enums.Tipo.TEXTUM;
 import com.ronaldo.codex.api.expresion.Expresion;
 import com.ronaldo.codex.api.semantica.Semantica;
+import static com.ronaldo.codex.api.enums.Tipo.BOOL;
 
 /**
  *
@@ -77,7 +77,7 @@ public class Suma extends Aritmetica {
                 3;
             case LITTERA ->
                 2;
-            case BOOLEANO ->
+            case BOOL ->
                 1;
             default ->
                 -1;

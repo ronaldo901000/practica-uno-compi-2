@@ -1,6 +1,7 @@
 package com.ronaldo.codex.api.semantica;
 
 import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorSemantico;
+import com.ronaldo.codex.api.enums.Tipo;
 import com.ronaldo.codex.api.exceptions.PilaException;
 import com.ronaldo.codex.api.pila.Pila;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class Semantica {
     private List<ErrorSemantico> errores;
     private TablaTipos tablaTipos;
     private Pila<String> pilaAmbitos;
+    private Pila<String> pilaRetorno;
+
     public static final String GLOBAL = "GLOBAL";
 
     public Semantica() {
@@ -23,6 +26,7 @@ public class Semantica {
         this.tablaSimbolos = new TablaSimbolos();
         this.errores = new ArrayList<>();
         this.pilaAmbitos = new Pila<>();
+        this.pilaRetorno = new Pila<>();
         this.pilaAmbitos.apilar(GLOBAL);
     }
 
@@ -70,6 +74,22 @@ public class Semantica {
 
     public static String getGLOBAL() {
         return GLOBAL;
+    }
+
+    public void entrarFuncionConRetorno(String tipo) {
+        pilaRetorno.apilar(tipo);
+    }
+
+    public void entrarFuncionSinRetorno() {
+        pilaRetorno.apilar(null);
+    }
+
+    public void salirFuncion() throws PilaException {
+        pilaRetorno.desapilar();
+    }
+
+    public String getTipoRetornoEsperado() {
+        return pilaRetorno.estaVacia() ? null : pilaRetorno.getTope();
     }
 
 }

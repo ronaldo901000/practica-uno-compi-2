@@ -96,7 +96,8 @@ public class Asignacion extends Instruccion {
             case 3 ->
                 Tipo.LITTERA;
             case 4 ->
-                Tipo.BOOLEANO;
+                Tipo.BOOL;
+
             case 5 ->
                 Tipo.VOID;
             default ->

@@ -34,7 +34,7 @@ public class ElseIfCondicional extends Condicional {
 
             Tipo tipoCondicion = this.condicion.getTipoResultado();
 
-            if (tipoCondicion != Tipo.ERROR && tipoCondicion != Tipo.BOOLEANO) {
+            if (tipoCondicion != Tipo.ERROR && tipoCondicion != Tipo.BOOL) {
                 semantica.getErrores().add(new ErrorSemantico(
                         getFila(),
                         getColumna(),

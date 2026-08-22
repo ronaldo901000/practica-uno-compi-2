@@ -13,7 +13,9 @@ public enum TipoCondicion {
     MENOR("<"),
     AND("&&"),
     OR("||"),
-    NOT("non");
+    NOT("non"),
+    EXPRESION("");
+    ;
 
     private final String operador;
 

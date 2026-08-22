@@ -1,33 +1,32 @@
 package com.ronaldo.codex.api.funcion;
 
+import com.ronaldo.codex.api.condicional.Condicional;
+import com.ronaldo.codex.api.condicional.ElseCondicion;
+import com.ronaldo.codex.api.condicional.IfCondicional;
 import com.ronaldo.codex.api.declaracion.Declaracion;
 import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorSemantico;
 import com.ronaldo.codex.api.enums.Categoria;
 import com.ronaldo.codex.api.enums.Tipo;
 import com.ronaldo.codex.api.exceptions.PilaException;
 import com.ronaldo.codex.api.instruccion.Instruccion;
+import com.ronaldo.codex.api.retorno.Retorno;
 import com.ronaldo.codex.api.parametros.creacion.ParametroCreacion;
 import com.ronaldo.codex.api.semantica.Llave;
 import com.ronaldo.codex.api.semantica.Semantica;
 import com.ronaldo.codex.api.semantica.Simbolo;
 import com.ronaldo.codex.api.services.verificacion.VerificadorTipos;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author ronaldo
- */
 public class FuncionReturn extends Funcion {
 
     private Tipo tipoRetorno;
-    private String idRetorno;
+    private String tipoRetornoString;
 
-    public FuncionReturn(String tipoRetornoString, String idRetorno,
-            int fila, int columna, String id) {
-
+    public FuncionReturn(String tipoRetornoString, int fila, int columna, String id) {
         super(fila, columna, id);
-        this.idRetorno = idRetorno;
+        this.tipoRetornoString = tipoRetornoString;
         VerificadorTipos verificadorTipos = new VerificadorTipos();
         this.tipoRetorno = verificadorTipos.verificar(tipoRetornoString);
 
@@ -36,34 +35,27 @@ public class FuncionReturn extends Funcion {
     @Override
     public void realizarTraduccion(StringBuffer sb) {
         sb.append("atioray ");
-        sb.append(traductor.traducir(tipoRetorno.getText())).append(" ");
-
+        String tipoTraducido = (tipoRetorno != null) ? tipoRetorno.getText() : tipoRetornoString;
+        sb.append(traductor.traducir(tipoTraducido)).append(" ");
         sb.append(traductor.traducir(id)).append("(");
-
         traducirParametros(sb);
-        sb.append(") \n").append("{").append("\n");     
+        sb.append(") \n").append("{").append("\n");
         traducirSeccionVariables(sb);
         traducirInstruccionesInternas(sb);
-        sb.append("eddereray ").append(traductor.traducir(idRetorno));
         sb.append("} inisfay;\n");
-
     }
 
     @Override
     public void verificarSemantica(Semantica semantica) throws PilaException, Exception {
 
-        //Verifica que no exista una funcion con el mismo ID en el ambito global
         if (semantica.getTablaSimbolos().buscar(this.id, semantica.getGLOBAL()) != null) {
             semantica.getErrores().add(new ErrorSemantico(
-                    getFila(),
-                    getColumna(),
-                    this.id,
+                    getFila(), getColumna(), this.id,
                     "La funcion '" + this.id + "' ya ha sido definida previamente."
             ));
             return;
         }
 
-        //Registrar la funcion en la tabla de simbolos
         Simbolo simboloFuncion = new Simbolo();
         simboloFuncion.setLlave(new Llave(this.id, semantica.getGLOBAL()));
         simboloFuncion.setCategoria(Categoria.FUNCION);
@@ -77,16 +69,16 @@ public class FuncionReturn extends Funcion {
                 }
             }
         }
-
         simboloFuncion.setListaParams(tiposParamsList);
         simboloFuncion.setNumeroParams(tiposParamsList.size());
 
         semantica.getTablaSimbolos().insertar(simboloFuncion);
 
-        //Entrar al nuevo ambito
         semantica.entrarAmbito(this.id);
+        semantica.entrarFuncionConRetorno(this.tipoRetornoString);
 
-        //Procesar parametros
+        int erroresAntesDelCuerpo = semantica.getErrores().size();
+
         if (this.parametros != null) {
             for (ParametroCreacion param : this.parametros) {
                 if (param != null) {
@@ -95,7 +87,6 @@ public class FuncionReturn extends Funcion {
             }
         }
 
-        //Procesar declaraciones de variables
         if (this.variables != null) {
             for (Declaracion dec : this.variables) {
                 if (dec != null) {
@@ -104,7 +95,6 @@ public class FuncionReturn extends Funcion {
             }
         }
 
-        //Procesar instrucciones internas
         if (this.instrucciones != null) {
             for (Instruccion inst : this.instrucciones) {
                 if (inst != null) {
@@ -113,48 +103,112 @@ public class FuncionReturn extends Funcion {
             }
         }
 
-        //Validar el identificador de retorno y su tipo
-        if (this.idRetorno != null) {
+        verificarCodigoNoAlcanzable(this.instrucciones, semantica);
 
-            Simbolo simRetorno = semantica.getTablaSimbolos().buscar(this.idRetorno, semantica.getAmbitoActual());
+        int erroresActuales = semantica.getErrores().size();
+        boolean huboErroresEnCuerpo = false;
 
-            if (simRetorno == null) {
-                simRetorno = semantica.getTablaSimbolos().buscar(this.idRetorno, semantica.GLOBAL);
-            }
-
-            if (simRetorno == null) {
-                semantica.getErrores().add(new ErrorSemantico(
-                        getFila(),
-                        getColumna(),
-                        this.idRetorno,
-                        "La variable de retorno '" + this.idRetorno + "' no esta declarada."
-                ));
-            } else {
-
-                Tipo tipoVarRetorno = Tipo.values()[simRetorno.getIdTipo()];
-
-                if (tipoVarRetorno != this.tipoRetorno) {
-                    semantica.getErrores().add(new ErrorSemantico(
-                            getFila(),
-                            getColumna(),
-                            this.idRetorno,
-                            "Tipo de retorno incompatible en la funcion '" + this.id
-                            + "'. Se esperaba '" + this.tipoRetorno + "' pero la variable '"
-                            + this.idRetorno + "' es de tipo '" + tipoVarRetorno + "'"
-                    ));
-                }
-            }
-        } else {
-            semantica.getErrores().add(new ErrorSemantico(
-                    getFila(),
-                    getColumna(),
-                    this.id,
-                    "La funcion '" + this.id
-                    + "' requiere especificar un identificador de retorno valido."
-            ));
+        if (erroresActuales > erroresAntesDelCuerpo) {
+            huboErroresEnCuerpo = true;
         }
 
+        if (!huboErroresEnCuerpo) {
+            if (!todosLosCaminosRetornan(this.instrucciones)) {
+                semantica.getErrores().add(new ErrorSemantico(
+                        getFila(), getColumna(), this.id,
+                        "La funcion '" + this.id + "' no retorna un valor en todos los caminos posibles."
+                ));
+            }
+        }
+
+        semantica.salirFuncion();
         semantica.salirAmbito();
+    }
+
+    private void verificarCodigoNoAlcanzable(List<Instruccion> instrucciones, Semantica semantica) {
+        if (instrucciones == null) {
+            return;
+        }
+
+        boolean yaRetorno = false;
+
+        for (Instruccion inst : instrucciones) {
+            if (inst == null) {
+                continue;
+            }
+
+            if (yaRetorno) {
+                semantica.getErrores().add(new ErrorSemantico(
+                        inst.getFila(), inst.getColumna(), "",
+                        "Codigo no alcanzable: ya se habia retornado un valor previamente."
+                ));
+                break;
+            }
+
+            if (inst instanceof Retorno) {
+                yaRetorno = true;
+            } else if (inst instanceof Condicional) {
+                List<Instruccion> instruccionUnica = new ArrayList<>();
+                instruccionUnica.add(inst);
+
+                if (todosLosCaminosRetornan(instruccionUnica)) {
+                    yaRetorno = true;
+                }
+            }
+        }
+    }
+
+    private boolean todosLosCaminosRetornan(List<Instruccion> instrucciones) {
+        if (instrucciones == null) {
+            return false;
+        }
+
+        for (Instruccion inst : instrucciones) {
+            if (inst == null) {
+                continue;
+            }
+
+            if (inst instanceof Retorno) {
+                return true;
+            }
+
+            if (inst instanceof IfCondicional) {
+                IfCondicional ifCond = (IfCondicional) inst;
+                List<Condicional> bifurcaciones = ifCond.getBifurcaciones();
+
+                if (bifurcaciones == null || bifurcaciones.isEmpty()) {
+                    continue;
+                }
+
+                boolean ramaSiRetorna = todosLosCaminosRetornan(ifCond.getInstruccionesInternas());
+
+                if (!ramaSiRetorna) {
+                    continue;
+                }
+
+                Condicional ultimaBif = bifurcaciones.get(bifurcaciones.size() - 1);
+                boolean tieneElseFinal = (ultimaBif instanceof ElseCondicion);
+
+                if (!tieneElseFinal) {
+                    continue;
+                }
+
+                boolean todasBifRetornan = true;
+                for (int i = 0; i < bifurcaciones.size(); i++) {
+                    Condicional bif = bifurcaciones.get(i);
+                    boolean ret = todosLosCaminosRetornan(bif.getInstruccionesInternas());
+                    if (!ret) {
+                        todasBifRetornan = false;
+                        break;
+                    }
+                }
+
+                if (todasBifRetornan) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public Tipo getTipoRetorno() {
@@ -165,44 +219,11 @@ public class FuncionReturn extends Funcion {
         this.tipoRetorno = tipoRetorno;
     }
 
-    public String getIdRetorno() {
-        return idRetorno;
+    public String getTipoRetornoString() {
+        return tipoRetornoString;
     }
 
-    public void setIdRetorno(String idRetorno) {
-        this.idRetorno = idRetorno;
+    public void setTipoRetornoString(String tipoRetornoString) {
+        this.tipoRetornoString = tipoRetornoString;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<ParametroCreacion> getParametros() {
-        return parametros;
-    }
-
-    public void setParametros(List<ParametroCreacion> parametros) {
-        this.parametros = parametros;
-    }
-
-    public List<Declaracion> getVariables() {
-        return variables;
-    }
-
-    public void setVariables(List<Declaracion> variables) {
-        this.variables = variables;
-    }
-
-    public List<Instruccion> getInstrucciones() {
-        return instrucciones;
-    }
-
-    public void setInstrucciones(List<Instruccion> instrucciones) {
-        this.instrucciones = instrucciones;
-    }
-
 }

@@ -31,7 +31,7 @@ public class TablaTipos {
         tipos.add(new ElementoTablaTipos(1, Tipo.DECIMALIS.getText(), GLOBAL));
         tipos.add(new ElementoTablaTipos(2, Tipo.TEXTUM.getText(), GLOBAL));
         tipos.add(new ElementoTablaTipos(3, Tipo.LITTERA.getText(), GLOBAL));
-        tipos.add(new ElementoTablaTipos(4, Tipo.BOOLEANO.getText(), GLOBAL));
+        tipos.add(new ElementoTablaTipos(4, Tipo.BOOL.getText(), GLOBAL));
         tipos.add(new ElementoTablaTipos(5, Tipo.VOID.getText(), GLOBAL));
     }
 

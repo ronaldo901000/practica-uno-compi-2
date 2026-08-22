@@ -26,7 +26,10 @@ public class IfCondicional extends Condicional {
         condicion.realizarTraduccion(sb);
         sb.append("){\n");
         for (Instruccion inst : instruccionesInternas) {
-            inst.realizarTraduccion(sb);
+            if (inst != null) {
+                inst.realizarTraduccion(sb);
+            }
+
         }
         sb.append("}\n");
         for (Condicional c : bifurcaciones) {
@@ -43,7 +46,7 @@ public class IfCondicional extends Condicional {
 
             Tipo tipoCondicion = this.condicion.getTipoResultado();
 
-            if (tipoCondicion != Tipo.ERROR && tipoCondicion != Tipo.BOOLEANO) {
+            if (tipoCondicion != Tipo.ERROR && tipoCondicion != Tipo.BOOL) {
                 semantica.getErrores().add(new ErrorSemantico(
                         getFila(),
                         getColumna(),
@@ -73,6 +76,10 @@ public class IfCondicional extends Condicional {
 
     public void agregarBifurcacion(Condicional condicional) {
         this.bifurcaciones.add(condicional);
+    }
+
+    public List<Condicional> getBifurcaciones() {
+        return bifurcaciones;
     }
 
 }

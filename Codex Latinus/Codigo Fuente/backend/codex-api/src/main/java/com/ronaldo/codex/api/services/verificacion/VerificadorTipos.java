@@ -20,7 +20,7 @@ public class VerificadorTipos {
 
     public Tipo verificar(String entrada) {
         if (StringUtils.isBlank(entrada)) {
-            return Tipo.BOOLEANO;
+            return Tipo.BOOL;
         }
 
         if (entrada.equals(NUMERUS)) {
@@ -31,6 +31,8 @@ public class VerificadorTipos {
             return Tipo.TEXTUM;
         } else if (entrada.equals(LITTERA)) {
             return Tipo.LITTERA;
+        } else if (entrada.equals(BOOL)) {
+            return Tipo.BOOL;
         }
         return null;
     }

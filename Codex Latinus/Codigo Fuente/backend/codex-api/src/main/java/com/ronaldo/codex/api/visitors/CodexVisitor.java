@@ -45,6 +45,7 @@ import com.ronaldo.codex.api.interfaces.Visitable;
 import com.ronaldo.codex.api.parametros.creacion.ParametroCreacion;
 import com.ronaldo.codex.api.parametros.creacion.ParametrosCreacion;
 import com.ronaldo.codex.api.parametros.llamada.ParametrosLlamada;
+import com.ronaldo.codex.api.retorno.Retorno;
 import com.ronaldo.codex.api.services.verificacion.VerificadorTipos;
 import com.ronaldo.codex.api.structura.AtributoStructura;
 import com.ronaldo.codex.api.structura.AtributosStructura;
@@ -420,32 +421,43 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
 
         int fila = ctx.start.getLine();
         int columna = ctx.start.getCharPositionInLine();
-        String id = ctx.ID(0).getText();
-        String idRetorno = ctx.ID(1).getText();
-        String tipo = ctx.tipo_dato().getText();
-        FuncionReturn funcionReturn = new FuncionReturn(tipo, idRetorno, fila, columna, id);
 
-        ParametrosCreacion parametros = (ParametrosCreacion) visit(ctx.parametros());
+        String id = ctx.ID().getText();
 
-        //agregar los parametros a la funcion
-        for (ParametroCreacion param : parametros.getParametros()) {
-            funcionReturn.getParametros().add(param);
+        String tipoRetorno = (ctx.tipo_dato() != null)
+                ? ctx.tipo_dato().getText()
+                : ctx.ID_STRUCT().getText();
+
+        FuncionReturn funcionReturn = new FuncionReturn(tipoRetorno, fila, columna, id);
+
+        if (ctx.parametros() != null) {
+            ParametrosCreacion parametros = (ParametrosCreacion) visit(ctx.parametros());
+            if (parametros != null && parametros.getParametros() != null) {
+                for (ParametroCreacion param : parametros.getParametros()) {
+                    funcionReturn.getParametros().add(param);
+                }
+            }
         }
 
-        //agregar las variables
-        ctx.seccion_var_funcion().variable();
-        for (CodexParser.VariableContext variableContext : ctx.seccion_var_funcion().variable()) {
-            Declaracion declaracion = (Declaracion) visit(variableContext);
-            funcionReturn.getVariables().add(declaracion);
+        if (ctx.seccion_var_funcion() != null && ctx.seccion_var_funcion().variable() != null) {
+            for (CodexParser.VariableContext variableContext : ctx.seccion_var_funcion().variable()) {
+                Declaracion declaracion = (Declaracion) visit(variableContext);
+                if (declaracion != null) {
+                    funcionReturn.getVariables().add(declaracion);
+                }
+            }
         }
 
-        //agregar las instrucciones a la funcion
-        for (CodexParser.InstruccionContext instCtx : ctx.instruccion()) {
-            Instruccion instruccion = (Instruccion) visit(instCtx);
-            funcionReturn.getInstrucciones().add(instruccion);
+        if (ctx.instruccion() != null) {
+            for (CodexParser.InstruccionContext instCtx : ctx.instruccion()) {
+                Instruccion instruccion = (Instruccion) visit(instCtx);
+                if (instruccion != null) {
+                    funcionReturn.getInstrucciones().add(instruccion);
+                }
+            }
         }
+
         return funcionReturn;
-
     }
 
     @Override
@@ -601,32 +613,57 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             return (FuncionImpresion) visit(ctx.fun_impresion());
         } else if (ctx.asignacion_array() != null) {
             return (AsignacionArray) visit(ctx.asignacion_array());
+        } else if (ctx.retorno() != null) {
+            return (Retorno) visit(ctx.retorno());
         }
         return null;
     }
 
     @Override
-    public Condicional visitCondicional(CodexParser.CondicionalContext ctx) {
+    public Retorno visitRetorno(CodexParser.RetornoContext ctx) {
+        int fila = ctx.start.getLine();
+        int columna = ctx.start.getCharPositionInLine();
+        Expresion ex = (Expresion) visit(ctx.expresion());
 
+        return new Retorno(ex, fila, columna);
+    }
+
+    @Override
+    public Condicional visitCondicional(CodexParser.CondicionalContext ctx) {
         int fila = ctx.SI().getSymbol().getLine();
         int columna = ctx.SI().getSymbol().getCharPositionInLine();
         Condicion condicion = (Condicion) visit(ctx.condicion());
         IfCondicional ifCondicional = new IfCondicional(fila, columna);
         ifCondicional.setCondicion(condicion);
 
-        //insercion de instrucciones internas
+        // Instrucciones de la rama principal (SI)
         for (CodexParser.InstruccionContext instCtx : ctx.instruccion()) {
             Instruccion instruccion = (Instruccion) visit(instCtx);
             ifCondicional.agregarInstruccion(instruccion);
         }
-
-        //insecion de bifurcaciones
+        
         for (CodexParser.Mas_condicionalesContext bifCtx : ctx.mas_condicionales()) {
-            Condicional condicional = (Condicional) visit(bifCtx);
-            ifCondicional.agregarBifurcacion(condicional);
+            recolectarTodasLasBifurcaciones(bifCtx, ifCondicional);
         }
 
         return ifCondicional;
+    }
+
+    private void recolectarTodasLasBifurcaciones(CodexParser.Mas_condicionalesContext ctx, IfCondicional ifCondicional) {
+        if (ctx == null) {
+            return;
+        }
+
+        Condicional condicional = (Condicional) visit(ctx);
+        if (condicional != null) {
+            ifCondicional.agregarBifurcacion(condicional);
+        }
+
+        if (ctx.mas_condicionales() != null && !ctx.mas_condicionales().isEmpty()) {
+            for (CodexParser.Mas_condicionalesContext subCtx : ctx.mas_condicionales()) {
+                recolectarTodasLasBifurcaciones(subCtx, ifCondicional);
+            }
+        }
     }
 
     @Override
@@ -634,23 +671,19 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         int fila = ctx.ALITER().getSymbol().getLine();
         int columna = ctx.ALITER().getSymbol().getCharPositionInLine();
 
-        //Caso 1: aliter (condicion)
         if (ctx.condicion() != null) {
             ElseIfCondicional elseIf = new ElseIfCondicional(fila, columna);
             Condicion condicion = (Condicion) visit(ctx.condicion());
-
             elseIf.setCondicion(condicion);
 
-            //agregar las instrucciones internas
             for (CodexParser.InstruccionContext instCtx : ctx.instruccion()) {
                 Instruccion instruccion = (Instruccion) visit(instCtx);
                 elseIf.agregarInstruccion(instruccion);
             }
             return elseIf;
-        } else {
+        } 
+        else {
             ElseCondicion elseCondicion = new ElseCondicion(fila, columna);
-
-            //insercion de instrucciones internas
             for (CodexParser.InstruccionContext instCtx : ctx.instruccion()) {
                 Instruccion instruccion = (Instruccion) visit(instCtx);
                 elseCondicion.agregarInstruccion(instruccion);
@@ -812,13 +845,13 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
 
             int fila = ctx.VERUM().getSymbol().getLine();
             int columna = ctx.VERUM().getSymbol().getCharPositionInLine();
-            return new ElementoTerminal(fila, columna, ctx.VERUM().getText(), Tipo.BOOLEANO);
+            return new ElementoTerminal(fila, columna, ctx.VERUM().getText(), Tipo.BOOL);
 
         } else if (ctx.FALSUS() != null) {
 
             int fila = ctx.FALSUS().getSymbol().getLine();
             int columna = ctx.FALSUS().getSymbol().getCharPositionInLine();
-            return new ElementoTerminal(fila, columna, ctx.FALSUS().getText(), Tipo.BOOLEANO);
+            return new ElementoTerminal(fila, columna, ctx.FALSUS().getText(), Tipo.BOOL);
 
         } else if (ctx.ID() != null) {
 
@@ -883,93 +916,66 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
 
     @Override
     public Condicion visitCondicion(CodexParser.CondicionContext ctx) {
-
         if (ctx.EQ_EQ() != null) {
             int fila = ctx.EQ_EQ().getSymbol().getLine();
             int columna = ctx.EQ_EQ().getSymbol().getCharPositionInLine();
-
             Expresion izquierda = (Expresion) visit(ctx.expresion(0));
             Expresion derecha = (Expresion) visit(ctx.expresion(1));
-
             return new Condicion(izquierda, derecha, TipoCondicion.IGUAL, fila, columna);
-
         } else if (ctx.NO_EQ() != null) {
             int fila = ctx.NO_EQ().getSymbol().getLine();
             int columna = ctx.NO_EQ().getSymbol().getCharPositionInLine();
-
             Expresion izquierda = (Expresion) visit(ctx.expresion(0));
             Expresion derecha = (Expresion) visit(ctx.expresion(1));
-
             return new Condicion(izquierda, derecha, TipoCondicion.DIFERENTE, fila, columna);
-
         } else if (ctx.MAYOR_EQ_Q() != null) {
             int fila = ctx.MAYOR_EQ_Q().getSymbol().getLine();
             int columna = ctx.MAYOR_EQ_Q().getSymbol().getCharPositionInLine();
-
             Expresion izquierda = (Expresion) visit(ctx.expresion(0));
             Expresion derecha = (Expresion) visit(ctx.expresion(1));
-
             return new Condicion(izquierda, derecha, TipoCondicion.MAYOR_IGUAL, fila, columna);
-
         } else if (ctx.MAYOR_Q() != null) {
             int fila = ctx.MAYOR_Q().getSymbol().getLine();
             int columna = ctx.MAYOR_Q().getSymbol().getCharPositionInLine();
-
             Expresion izquierda = (Expresion) visit(ctx.expresion(0));
             Expresion derecha = (Expresion) visit(ctx.expresion(1));
-
             return new Condicion(izquierda, derecha, TipoCondicion.MAYOR, fila, columna);
-
         } else if (ctx.MENOR_EQ_Q() != null) {
             int fila = ctx.MENOR_EQ_Q().getSymbol().getLine();
             int columna = ctx.MENOR_EQ_Q().getSymbol().getCharPositionInLine();
-
             Expresion izquierda = (Expresion) visit(ctx.expresion(0));
             Expresion derecha = (Expresion) visit(ctx.expresion(1));
-
             return new Condicion(izquierda, derecha, TipoCondicion.MENOR_IGUAL, fila, columna);
-
         } else if (ctx.MENOR_Q() != null) {
             int fila = ctx.MENOR_Q().getSymbol().getLine();
             int columna = ctx.MENOR_Q().getSymbol().getCharPositionInLine();
-
             Expresion izquierda = (Expresion) visit(ctx.expresion(0));
             Expresion derecha = (Expresion) visit(ctx.expresion(1));
-
             return new Condicion(izquierda, derecha, TipoCondicion.MENOR, fila, columna);
-
         } else if (ctx.AND() != null) {
             int fila = ctx.AND().getSymbol().getLine();
             int columna = ctx.AND().getSymbol().getCharPositionInLine();
-
-            Expresion izquierda = (Expresion) visit(ctx.condicion(0));
-            Expresion derecha = (Expresion) visit(ctx.condicion(1));
-
+            Condicion izquierda = (Condicion) visit(ctx.condicion(0));
+            Condicion derecha = (Condicion) visit(ctx.condicion(1));
             return new Condicion(izquierda, derecha, TipoCondicion.AND, fila, columna);
-
         } else if (ctx.OR() != null) {
             int fila = ctx.OR().getSymbol().getLine();
             int columna = ctx.OR().getSymbol().getCharPositionInLine();
-
-            Expresion izquierda = (Expresion) visit(ctx.condicion(0));
-            Expresion derecha = (Expresion) visit(ctx.condicion(1));
-
+            Condicion izquierda = (Condicion) visit(ctx.condicion(0));
+            Condicion derecha = (Condicion) visit(ctx.condicion(1));
             return new Condicion(izquierda, derecha, TipoCondicion.OR, fila, columna);
-
         } else if (ctx.NON() != null) {
             int fila = ctx.NON().getSymbol().getLine();
             int columna = ctx.NON().getSymbol().getCharPositionInLine();
-
-            Expresion valor = (Expresion) visit(ctx.condicion(0));
-
+            Condicion valor = (Condicion) visit(ctx.condicion(0));
             return new Condicion(valor, TipoCondicion.NOT, fila, columna);
-
         } else if (ctx.PAR_A() != null) {
-
             return (Condicion) visit(ctx.condicion(0));
-
+        } else {
+            int fila = ctx.expresion(0).getStart().getLine();
+            int columna = ctx.expresion(0).getStart().getCharPositionInLine();
+            Expresion valor = (Expresion) visit(ctx.expresion(0));
+            return new Condicion(valor, TipoCondicion.EXPRESION, fila, columna);
         }
-
-        return null;
     }
 }

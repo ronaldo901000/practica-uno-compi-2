@@ -44,7 +44,7 @@ public class CicloDoWhile extends Ciclo {
             this.condicion.verificarSemantica(semantica);
             Tipo t = condicion.getTipoResultado();
 
-            if (t != Tipo.ERROR && t != Tipo.BOOLEANO) {
+            if (t != Tipo.ERROR && t != Tipo.BOOL) {
                 semantica.getErrores().add(new ErrorSemantico(
                         getFila(),
                         getColumna(),

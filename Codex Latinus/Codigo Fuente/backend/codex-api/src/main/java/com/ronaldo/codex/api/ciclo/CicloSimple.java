@@ -37,7 +37,7 @@ public class CicloSimple extends Ciclo {
 
             Tipo tipoCondicion = this.getCondicion().getTipoResultado();
 
-            if (tipoCondicion != Tipo.ERROR && tipoCondicion != Tipo.BOOLEANO) {
+            if (tipoCondicion != Tipo.ERROR && tipoCondicion != Tipo.BOOL) {
                 semantica.getErrores().add(new ErrorSemantico(
                         getFila(),
                         getColumna(),

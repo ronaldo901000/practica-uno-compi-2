@@ -9,7 +9,7 @@ public enum Tipo {
     DECIMALIS("decimalis"),
     TEXTUM("textum"),
     LITTERA("littera"),
-    BOOLEANO("booleano"),
+    BOOL("bool"),
     VOID("void"),
     ARRAY("array"),
     STRUCTURA("structura"),

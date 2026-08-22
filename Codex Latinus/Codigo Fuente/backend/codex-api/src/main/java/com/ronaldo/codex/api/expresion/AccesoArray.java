@@ -81,6 +81,10 @@ public class AccesoArray extends Expresion {
         }
 
         this.tipoResultado = Tipo.values()[simbolo.getIdTipo()];
+
+        if (semantica.getTablaTipos() != null) {
+            this.nombreTipoEstructura = semantica.getTablaTipos().obtenerNombreTipoPorId(simbolo.getIdTipo());
+        }
     }
 
     public int getPosicion() {

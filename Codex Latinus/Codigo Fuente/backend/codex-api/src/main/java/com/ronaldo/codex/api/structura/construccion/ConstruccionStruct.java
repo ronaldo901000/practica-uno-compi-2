@@ -50,7 +50,6 @@ public class ConstruccionStruct extends Declaracion {
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
 
-        // Buscar el tipo de la estructura en la TablaTipos
         ElementoTablaTipos definicionStruct = semantica.getTablaTipos().getTipoPorNombre(this.tipoStruct);
 
         if (definicionStruct == null) {
@@ -76,12 +75,10 @@ public class ConstruccionStruct extends Declaracion {
             ));
         }
 
-        //Valida cada elemento en la construccion
         for (ElementoConstruccionStruct elem : this.elementosConstruccion) {
 
             elem.verificarSemantica(semantica);
 
-            // Busca si el atributo existe en la definición del struct
             DeclaracionAtributoStructura atrDef = definicionStruct.buscarAtributo(elem.getId());
 
             if (atrDef == null) {
@@ -90,15 +87,14 @@ public class ConstruccionStruct extends Declaracion {
                         elem.getColumna(),
                         elem.getId(),
                         "El atributo '" + elem.getId()
-                        + "' no existe en la definicion de '" + this.tipoStruct
+                        + "' no existe en la definición de '" + this.tipoStruct + "'"
                 ));
             } else {
-                //verificacion de los campos llenados en la construccion con la definicion del struct
+
                 elem.validarCompatibilidadConDefinicion(semantica, atrDef);
             }
         }
 
-        // registrar la nueva variable a la tabla de simbolos
         Simbolo simbolo = new Simbolo();
         Llave llave = new Llave(this.getId(), semantica.getAmbitoActual());
         simbolo.setLlave(llave);

@@ -43,7 +43,7 @@ tipo_dato
     | DECIMALIS
     | TEXTUM
     | LITTERA
-    | /**cadena vacia (toma el valor de boolean)**/
+    | BOOL
     ;
 
 ini_array
@@ -144,22 +144,33 @@ funcion
     | funcion_con_retorno
     ;
 
+/** FUNCIONES **/
+
 funcion_sin_retorno
-    :ACTIO ID 
-    PAR_A parametros PAR_C 
-    LLAVE_A seccion_var_funcion instruccion* 
-    LLAVE_C FINIS 
-    P_COMA
+    : ACTIO ID 
+      PAR_A parametros PAR_C 
+      LLAVE_A seccion_var_funcion? instruccion* 
+      LLAVE_C FINIS 
+      P_COMA
     ;
 
 funcion_con_retorno
-    : RATIO tipo_dato ID PAR_A parametros PAR_C 
-    LLAVE_A seccion_var_funcion instruccion* REDDERE ID P_COMA
-    LLAVE_C FINIS 
-    P_COMA  
+    : RATIO (tipo_dato | ID_STRUCT) ID 
+      PAR_A parametros PAR_C 
+      LLAVE_A seccion_var_funcion? instruccion*
+      LLAVE_C FINIS 
+      P_COMA  
     ;
 
-/**funciones especiales**/
+seccion_var_funcion
+    : VARIABILES CORCH_A variable* CORCH_C P_COMA?
+    ;
+
+tipo_retorno_funcion
+    : tipo_dato
+    | ID_STRUCT
+    ;
+
 
 
 //lectura
@@ -182,10 +193,6 @@ impresion
     ;
 
 
-seccion_var_funcion
-    : VARIABILES CORCH_A variable* CORCH_C
-    ;
-    
 parametros
     : parametros COMA parametro
     | parametro
@@ -204,21 +211,27 @@ bloque_maior
     : MAIOR instruccion* FINIS_MAY P_COMA
     ;
 
+    
+retorno
+    : REDDERE expresion P_COMA
+    ;
 
 instruccion
-    : condicional //if 
+    : condicional
     | ciclo_simple
     | ciclo_do_while
     | ciclo_iterador
-    | operacion_abrev
+    | operacion_abrev P_COMA
     | asignacion
     | asignacion_array
     | fun_lectura
     | fun_lectura_guardado
     | fun_impresion
     | llamada_funcion P_COMA
+    | retorno
+    | PERGE P_COMA
+    | INTERRUMPE P_COMA
     ;
-
 /**CONDICIONALES**/
 
 condicional
@@ -227,7 +240,7 @@ condicional
 
 mas_condicionales
     : ALITER PAR_A condicion PAR_C LLAVE_A instruccion* LLAVE_C mas_condicionales*
-    | ALITER LLAVE_A LLAVE_C
+    | ALITER LLAVE_A instruccion* LLAVE_C
     ;
     
 
@@ -260,7 +273,7 @@ operacion_abrev
     : ID MAS_MAS
     | ID MENOS_MENOS
     ;
-    
+
 expresion
     : PAR_A expresion PAR_C
     | expresion MULTI expresion
@@ -293,7 +306,8 @@ parametros_llamada
     ;
 
 condicion
-    : expresion EQ_EQ expresion
+    : NON condicion
+    | expresion EQ_EQ expresion
     | expresion NO_EQ expresion
     | expresion MAYOR_EQ_Q expresion
     | expresion MAYOR_Q expresion
@@ -301,10 +315,9 @@ condicion
     | expresion MENOR_Q expresion
     | condicion AND condicion
     | condicion OR condicion
-    | NON condicion
     | PAR_A condicion PAR_C
+    | expresion
     ;
-
 
 /**Analisis Lexico**/
 
@@ -318,6 +331,7 @@ NUMERUS: 'numerus';
 DECIMALIS:  'decimalis';
 TEXTUM: 'textum';
 LITTERA: 'littera';
+BOOL: 'bool';
 VERUM:  'verum';
 FALSUS: 'falsus';
 STRUCTURA:  'structura';
@@ -368,7 +382,7 @@ ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 ENTERO: [0-9]+ ;
 DECIMAL: [0-9]+ '.' [0-9]+;
 CADENA : '"' .*? '"' ;
-CHAR : '\'' [^'\r\n] '\'' ;
+CHAR : '\'' . '\'' ;
 COMENTARIO_LINEA : '//' ~[\r\n]* -> channel(HIDDEN) ;
 COMENTARIO_BLOQUE : '##' .*? '##' -> channel(HIDDEN) ;
 WS: [ \t\n\r\f\u00A0\u200B] -> skip;

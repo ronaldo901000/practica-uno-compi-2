@@ -63,7 +63,7 @@ public class Simbolo {
             case 3:
                 return Tipo.LITTERA;
             case 4:
-                return Tipo.BOOLEANO;
+                return Tipo.BOOL;
             case 5:
                 return Tipo.VOID;
             default:

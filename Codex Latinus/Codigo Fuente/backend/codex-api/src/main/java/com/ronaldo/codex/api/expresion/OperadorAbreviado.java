@@ -87,7 +87,8 @@ public class OperadorAbreviado extends Expresion {
             case 3 ->
                 Tipo.LITTERA;
             case 4 ->
-                Tipo.BOOLEANO;
+                Tipo.BOOL;
+
             default ->
                 Tipo.ERROR;
         };

@@ -1,11 +1,11 @@
 package com.ronaldo.codex.api.aritmetica;
 
 import com.ronaldo.codex.api.enums.Tipo;
-import static com.ronaldo.codex.api.enums.Tipo.BOOLEANO;
 import static com.ronaldo.codex.api.enums.Tipo.DECIMALIS;
 import static com.ronaldo.codex.api.enums.Tipo.LITTERA;
 import static com.ronaldo.codex.api.enums.Tipo.NUMERUS;
 import com.ronaldo.codex.api.expresion.Expresion;
+import static com.ronaldo.codex.api.enums.Tipo.BOOL;
 
 /**
  *
@@ -46,7 +46,7 @@ public abstract class Aritmetica extends Expresion {
                 return 3;
             case LITTERA:
                 return 2;
-            case BOOLEANO:
+            case BOOL:
                 return 1;
             default:
                 return -1;
