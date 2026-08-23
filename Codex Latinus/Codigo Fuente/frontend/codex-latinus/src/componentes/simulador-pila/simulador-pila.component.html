@@ -1,6 +1,6 @@
 <div class="simulador-container" *ngIf="pasos && pasos.length > 0">
 
-  <!-- Controles de navegación -->
+
   <div class="controles">
     <button (click)="irAlPrimero()" [disabled]="pasoActual === 0">«</button>
     <button (click)="anterior()" [disabled]="pasoActual === 0">‹</button>
@@ -11,7 +11,7 @@
 
   <div class="simulador-body">
 
-    <!-- Pila -->
+
     <div class="pila-wrapper">
       <div class="pila">
         <div
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <!-- Log de acciones -->
+
     <div class="log-wrapper">
       <div class="log-titulo">LOG</div>
       <div class="log">
@@ -46,5 +46,5 @@
 </div>
 
 <div *ngIf="!pasos || pasos.length === 0" class="sin-datos">
-  No hay simulación disponible. Ejecuta un análisis primero.
+
 </div>
