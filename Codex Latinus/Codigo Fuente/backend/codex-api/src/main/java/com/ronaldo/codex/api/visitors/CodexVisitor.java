@@ -10,6 +10,7 @@ import com.ronaldo.codex.api.aritmetica.Suma;
 import com.ronaldo.codex.api.asignacion.Asignacion;
 import com.ronaldo.codex.api.asignacion.AsignacionAbreviada;
 import com.ronaldo.codex.api.asignacion.AsignacionArray;
+import com.ronaldo.codex.api.asignacion.AsignacionAtributoStruct;
 import com.ronaldo.codex.api.bloque.maior.BloqueMaior;
 import com.ronaldo.codex.api.bloque.munera.BloqueMunera;
 import com.ronaldo.codex.api.bloque.variables.BloqueVariables;
@@ -40,7 +41,9 @@ import com.ronaldo.codex.api.funcion.FuncionLecturaGuardado;
 import com.ronaldo.codex.api.funcion.FuncionReturn;
 import com.ronaldo.codex.api.funcion.FuncionVoid;
 import com.ronaldo.codex.api.ast.Ast;
+import com.ronaldo.codex.api.expresion.AccesoAtributoStruct;
 import com.ronaldo.codex.api.instruccion.Instruccion;
+import com.ronaldo.codex.api.instruccion.struct.LlamadaAtributoStruct;
 import com.ronaldo.codex.api.interfaces.Visitable;
 import com.ronaldo.codex.api.parametros.creacion.ParametroCreacion;
 import com.ronaldo.codex.api.parametros.creacion.ParametrosCreacion;
@@ -393,27 +396,34 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         String id = ctx.ID().getText();
         FuncionVoid funcionVoid = new FuncionVoid(fila, columna, id);
 
-        ParametrosCreacion parametros = (ParametrosCreacion) visit(ctx.parametros());
-
-        //agregar los parametros a la funcion
-        for (ParametroCreacion param : parametros.getParametros()) {
-            funcionVoid.getParametros().add(param);
+        if (ctx.parametros() != null) {
+            ParametrosCreacion parametros = (ParametrosCreacion) visit(ctx.parametros());
+            if (parametros != null && parametros.getParametros() != null) {
+                for (ParametroCreacion param : parametros.getParametros()) {
+                    funcionVoid.getParametros().add(param);
+                }
+            }
         }
 
-        //agregar las variables
-        ctx.seccion_var_funcion().variable();
-        for (CodexParser.VariableContext variableContext : ctx.seccion_var_funcion().variable()) {
-            Declaracion declaracion = (Declaracion) visit(variableContext);
-            funcionVoid.getVariables().add(declaracion);
+        if (ctx.seccion_var_funcion() != null && ctx.seccion_var_funcion().variable() != null) {
+            for (CodexParser.VariableContext variableContext : ctx.seccion_var_funcion().variable()) {
+                Declaracion declaracion = (Declaracion) visit(variableContext);
+                if (declaracion != null) {
+                    funcionVoid.getVariables().add(declaracion);
+                }
+            }
         }
 
-        //agregar las instrucciones a la funcion
-        for (CodexParser.InstruccionContext instCtx : ctx.instruccion()) {
-            Instruccion instruccion = (Instruccion) visit(instCtx);
-            funcionVoid.getInstrucciones().add(instruccion);
+        if (ctx.instruccion() != null) {
+            for (CodexParser.InstruccionContext instCtx : ctx.instruccion()) {
+                Instruccion instruccion = (Instruccion) visit(instCtx);
+                if (instruccion != null) {
+                    funcionVoid.getInstrucciones().add(instruccion);
+                }
+            }
         }
+
         return funcionVoid;
-
     }
 
     @Override
@@ -615,8 +625,40 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             return (AsignacionArray) visit(ctx.asignacion_array());
         } else if (ctx.retorno() != null) {
             return (Retorno) visit(ctx.retorno());
+        } else if (ctx.asig_atributo_struct() != null) {
+            return (AsignacionAtributoStruct) visit(ctx.asig_atributo_struct());
+        } else if (ctx.llamada_atributo_struct() != null) {
+            int linea = ctx.llamada_atributo_struct().start.getLine();
+            int columna = ctx.llamada_atributo_struct().start.getCharPositionInLine();
+
+            AccesoAtributoStruct acceso = visitLlamada_atributo_struct(ctx.llamada_atributo_struct());
+            if (acceso != null) {
+                return new LlamadaAtributoStruct(acceso, linea, columna);
+            }
+            return null;
         }
         return null;
+    }
+
+    @Override
+    public AsignacionAtributoStruct visitAsig_atributo_struct(CodexParser.Asig_atributo_structContext ctx) {
+        if (ctx == null || ctx.llamada_atributo_struct() == null || ctx.expresion() == null) {
+            return null;
+        }
+
+        int fila = ctx.start.getLine();
+        int columna = ctx.start.getCharPositionInLine();
+
+        AccesoAtributoStruct acceso = visitLlamada_atributo_struct(ctx.llamada_atributo_struct());
+        if (acceso == null) {
+            return null;
+        }
+
+        LlamadaAtributoStruct llamada = new LlamadaAtributoStruct(acceso, fila, columna);
+
+        Expresion expr = (Expresion) visit(ctx.expresion());
+
+        return new AsignacionAtributoStruct(llamada, expr, fila, columna);
     }
 
     @Override
@@ -641,7 +683,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             Instruccion instruccion = (Instruccion) visit(instCtx);
             ifCondicional.agregarInstruccion(instruccion);
         }
-        
+
         for (CodexParser.Mas_condicionalesContext bifCtx : ctx.mas_condicionales()) {
             recolectarTodasLasBifurcaciones(bifCtx, ifCondicional);
         }
@@ -681,8 +723,7 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
                 elseIf.agregarInstruccion(instruccion);
             }
             return elseIf;
-        } 
-        else {
+        } else {
             ElseCondicion elseCondicion = new ElseCondicion(fila, columna);
             for (CodexParser.InstruccionContext instCtx : ctx.instruccion()) {
                 Instruccion instruccion = (Instruccion) visit(instCtx);
@@ -777,6 +818,17 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
     }
 
     @Override
+    public AccesoAtributoStruct visitLlamada_atributo_struct(CodexParser.Llamada_atributo_structContext ctx) {
+        if (ctx != null && ctx.expresion() != null) {
+            Object resultado = visit(ctx.expresion());
+            if (resultado instanceof AccesoAtributoStruct) {
+                return (AccesoAtributoStruct) resultado;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Expresion visitExpresion(CodexParser.ExpresionContext ctx) {
 
         if (ctx.MULTI() != null) {
@@ -853,12 +905,6 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
             int columna = ctx.FALSUS().getSymbol().getCharPositionInLine();
             return new ElementoTerminal(fila, columna, ctx.FALSUS().getText(), Tipo.BOOL);
 
-        } else if (ctx.ID() != null) {
-
-            int fila = ctx.ID().getSymbol().getLine();
-            int columna = ctx.ID().getSymbol().getCharPositionInLine();
-            return new AccesoVariable(fila, columna, ctx.ID().getText());
-
         } else if (ctx.PAR_A() != null) {
 
             return (Expresion) visit(ctx.expresion(0));
@@ -870,6 +916,33 @@ public class CodexVisitor extends CodexBaseVisitor<Visitable> {
         } else if (ctx.llamada_funcion() != null) {
 
             return (LlamadaFuncion) visit(ctx.llamada_funcion());
+
+        }
+        if (ctx.PUNTO() != null && ctx.ID() != null) {
+            int fila = ctx.start.getLine();
+            int columna = ctx.start.getCharPositionInLine();
+            String atributo = ctx.ID().getText();
+
+            Expresion izq = (Expresion) visit(ctx.expresion(0));
+
+            if (izq instanceof AccesoAtributoStruct) {
+                AccesoAtributoStruct structAcceso = (AccesoAtributoStruct) izq;
+                structAcceso.getIdsLlamada().add(atributo);
+                return structAcceso;
+            }
+
+            String idInstancia = (izq instanceof AccesoVariable)
+                    ? ((AccesoVariable) izq).getId()
+                    : ctx.expresion(0).getText();
+
+            AccesoAtributoStruct structAcceso = new AccesoAtributoStruct(idInstancia, fila, columna);
+            structAcceso.getIdsLlamada().add(atributo);
+            return structAcceso;
+        } else if (ctx.ID() != null) {
+
+            int fila = ctx.ID().getSymbol().getLine();
+            int columna = ctx.ID().getSymbol().getCharPositionInLine();
+            return new AccesoVariable(fila, columna, ctx.ID().getText());
 
         }
 

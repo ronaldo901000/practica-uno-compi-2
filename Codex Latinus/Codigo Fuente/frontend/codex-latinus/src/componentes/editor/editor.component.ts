@@ -1,5 +1,6 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { TextoEntradaService } from '../../servicios/texto-entrada/TextoEntrada.service';
+import { EntradaService } from '../../servicios/entrada/Entrada.service';
 
 @Component({
   selector: 'app-editor',
@@ -13,11 +14,22 @@ export class EditorComponent {
   contenido: string = '';
   lineas: number[] = [1];
 
-  constructor(private textoService:TextoEntradaService) {
+  constructor(
+    private textoService: TextoEntradaService,
+    private entradaService: EntradaService
+  ) {
+
     effect(() => {
+
+      const nuevoContenido = this.entradaService.respuesta$();
+      if (nuevoContenido !== this.contenido) {
+        this.contenido = nuevoContenido;
         this.actualizarLineas();
+      }
     });
   }
+
+
 
   actualizarLineas() {
     const total = this.contenido.split('\n').length;
@@ -31,12 +43,13 @@ export class EditorComponent {
     }
   }
 
-  onContenidoCambia(nuevoContenido: string) {
-    this.contenido = nuevoContenido;
-    this.actualizarLineas();
-  }
-  onTextoChange(entrada:string){
-    this.textoService.setContenido(entrada);
-  }
+onContenidoCambia(nuevoContenido: string) {
+  this.contenido = nuevoContenido;
+  this.actualizarLineas();
+  this.entradaService.setRespuesta(nuevoContenido);
+}
 
+onTextoChange(entrada: string) {
+  this.textoService.setContenido(entrada);
+}
 }

@@ -65,12 +65,17 @@ dec_structura
     ;
 
 atributos
-    : atributos COMA atributo
+    : atributos separador atributo
     | atributo
     ;
 
+separador
+    : COMA
+    | P_COMA
+    | /**lambda**/
+    ;
 atributo
-    : tipo ID DOS_P tipo_dato_atributo 
+    : tipo ID DOS_P tipo_dato_atributo separador
     ;
 
 tipo
@@ -111,7 +116,11 @@ tamaño_array
 /**asignacion a una posicion en especifico a un atributo de structura de tipo array**/
 
 asig_atributo_array
-    : ID PUNTO ID tamaño_array EQ LLAVE_A  LLAVE_C
+    : expresion tamaño_array EQ LLAVE_A  LLAVE_C
+    ;
+
+asig_atributo_struct
+    : llamada_atributo_struct EQ expresion P_COMA
     ;
 
 elementos_asig
@@ -148,18 +157,18 @@ funcion
 
 funcion_sin_retorno
     : ACTIO ID 
-      PAR_A parametros PAR_C 
-      LLAVE_A seccion_var_funcion? instruccion* 
-      LLAVE_C FINIS 
-      P_COMA
+    PAR_A parametros PAR_C 
+    LLAVE_A seccion_var_funcion? instruccion* 
+    LLAVE_C FINIS 
+    P_COMA
     ;
 
 funcion_con_retorno
     : RATIO (tipo_dato | ID_STRUCT) ID 
-      PAR_A parametros PAR_C 
-      LLAVE_A seccion_var_funcion? instruccion*
-      LLAVE_C FINIS 
-      P_COMA  
+    PAR_A parametros PAR_C 
+    LLAVE_A seccion_var_funcion? instruccion*
+    LLAVE_C FINIS 
+    P_COMA  
     ;
 
 seccion_var_funcion
@@ -179,7 +188,7 @@ fun_lectura
     ;
 
 fun_lectura_guardado
-    : ID MENOR_Q MENOR_Q 
+    : ID MENOR_Q MENOR_Q separador
     ;
 
 //impresion
@@ -227,6 +236,8 @@ instruccion
     | fun_lectura
     | fun_lectura_guardado
     | fun_impresion
+    | llamada_atributo_struct
+    | asig_atributo_struct
     | llamada_funcion P_COMA
     | retorno
     | PERGE P_COMA
@@ -274,6 +285,10 @@ operacion_abrev
     | ID MENOS_MENOS
     ;
 
+llamada_atributo_struct
+    :expresion
+    ;
+
 expresion
     : PAR_A expresion PAR_C
     | expresion MULTI expresion
@@ -282,13 +297,14 @@ expresion
     | expresion MENOS expresion
     | valor_posicion_array
     | llamada_funcion
+    | expresion PUNTO ID 
     | ENTERO
     | DECIMAL
     | CADENA
     | CHAR
     | VERUM
     | FALSUS
-    | ID
+    | ID  
     ;
 
 valor_posicion_array
