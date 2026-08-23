@@ -82,4 +82,38 @@ public class IfCondicional extends Condicional {
         return bifurcaciones;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Sentencia If\", fillcolor=\"white\"];\n");
+
+        if (this.condicion != null) {
+            this.condicion.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.condicion.getIdNodo())
+                    .append(" [label=\"condición\"];\n");
+        }
+
+        if (this.instruccionesInternas != null) {
+            for (Instruccion inst : this.instruccionesInternas) {
+                if (inst != null) {
+                    inst.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(inst.getIdNodo())
+                            .append(" [label=\"entonces\"];\n");
+                }
+            }
+        }
+
+        if (this.bifurcaciones != null) {
+            for (Condicional bifurcacion : this.bifurcaciones) {
+                if (bifurcacion != null) {
+                    bifurcacion.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(bifurcacion.getIdNodo())
+                            .append(" [label=\"bifurcación\"];\n");
+                }
+            }
+        }
+    }
 }

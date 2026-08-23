@@ -126,4 +126,24 @@ public class ConstruccionStruct extends Declaracion {
         this.elementosConstruccion = elementosConstruccion;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Construcción Struct\\nID: ")
+                .append(this.getId() != null ? this.getId() : "Anónimo")
+                .append("\\nTipo: ").append(this.tipoStruct)
+                .append("\", fillcolor=\"white\"];\n");
+
+        if (this.elementosConstruccion != null) {
+            for (ElementoConstruccionStruct elem : this.elementosConstruccion) {
+                if (elem != null) {
+                    elem.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(elem.getIdNodo())
+                            .append(" [label=\"elemento\"];\n");
+                }
+            }
+        }
+    }
+
 }

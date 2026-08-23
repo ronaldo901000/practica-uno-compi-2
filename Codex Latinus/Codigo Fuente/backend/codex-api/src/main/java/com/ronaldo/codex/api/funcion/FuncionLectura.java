@@ -23,4 +23,10 @@ public class FuncionLectura extends FuncionEspecial {
         sb.append("%OINK_OINK");
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Funcion Lectura\\n(%OINK_OINK)\", fillcolor=\"white\"];\n");
+    }
+
 }

@@ -150,4 +150,34 @@ public class Condicion extends Expresion {
         this.tipo = tipo;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        String simboloOp = (this.tipo != null) ? this.tipo.getOperador() : "?";
+        String idSimbolo = "nodo" + idNodo + "_op";
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Condicion\", fillcolor=\"white\"];\n");
+
+        if (this.valorUno != null) {
+            this.valorUno.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.valorUno.getIdNodo())
+                    .append(" [label=\"izq\"];\n");
+        }
+
+        sb.append("  ").append(idSimbolo)
+                .append(" [label=\"").append(simboloOp)
+                .append("\", fillcolor=\"white\"];\n");
+        sb.append("  nodo").append(idNodo)
+                .append(" -> ").append(idSimbolo)
+                .append(" [label=\"operador\"];\n");
+
+        if (this.valorDos != null) {
+            this.valorDos.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.valorDos.getIdNodo())
+                    .append(" [label=\"der\"];\n");
+        }
+    }
+
 }

@@ -49,7 +49,12 @@ public class AccesoVariable extends Expresion {
     public void setId(String id) {
         this.id = id;
     }
-    
-    
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"ID: ").append(this.id)
+                .append("\", fillcolor=\"white\"];\n");
+    }
 
 }

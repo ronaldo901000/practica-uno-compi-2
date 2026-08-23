@@ -39,4 +39,16 @@ public class LlamadaAtributoStruct extends Instruccion {
         this.acceso = acceso;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Llamada Atributo Struct\", fillcolor=\"white\"];\n");
+        if (this.acceso != null) {
+            this.acceso.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.acceso.getIdNodo())
+                    .append(";\n");
+        }
+    }
+
 }

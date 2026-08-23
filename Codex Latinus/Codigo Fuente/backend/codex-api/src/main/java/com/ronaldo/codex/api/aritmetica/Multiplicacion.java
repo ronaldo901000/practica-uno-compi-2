@@ -68,4 +68,9 @@ public class Multiplicacion extends Aritmetica {
         }
     }
 
+    @Override
+    protected String getOperador() {
+        return "*";
+    }
+
 }

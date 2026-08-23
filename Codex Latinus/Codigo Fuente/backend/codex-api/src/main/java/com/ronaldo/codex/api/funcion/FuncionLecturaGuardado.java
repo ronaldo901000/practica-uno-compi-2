@@ -55,4 +55,11 @@ public class FuncionLecturaGuardado extends FuncionEspecial {
         this.id = id;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Lectura Guardado (%OINK OINK):\\nVariable: ").append(this.id != null ? this.id : "desconocida")
+                .append("\", fillcolor=\"white\"];\n");
+    }
+
 }

@@ -77,7 +77,11 @@ public class Analizador {
             //Generacion de la traduccion al lenguaje pig latin
             StringBuffer sb = new StringBuffer();
             ast.realizarTraduccion(sb);
-
+            
+            //Generar archivo .dot
+            String dot = ast.generarDotCompleto();
+            respuesta.setArchivoDot(dot);
+            
             respuesta.setTraduccionPigLatin(sb.toString());
         }
 

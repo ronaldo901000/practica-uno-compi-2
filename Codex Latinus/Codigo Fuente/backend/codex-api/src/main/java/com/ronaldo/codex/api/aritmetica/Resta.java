@@ -67,4 +67,9 @@ public class Resta extends Aritmetica {
         }
     }
 
+    @Override
+    protected String getOperador() {
+        return "-";
+    }
+
 }

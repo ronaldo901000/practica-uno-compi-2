@@ -24,7 +24,7 @@ public class CicloSimple extends Ciclo {
         sb.append(") { \n");
 
         traducirInstruccionesInternas(sb);
-        
+
         sb.append("} inisfay\n");
 
     }
@@ -56,6 +56,31 @@ public class CicloSimple extends Ciclo {
             }
         }
 
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Ciclo Simple\", fillcolor=\"white\"];\n");
+
+        if (this.getCondicion() != null) {
+            this.getCondicion().generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.getCondicion().getIdNodo())
+                    .append(" [label=\"condición\"];\n");
+        }
+
+        if (this.instruccionesInternas != null) {
+            for (Instruccion instruccion : this.instruccionesInternas) {
+                if (instruccion != null) {
+                    instruccion.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(instruccion.getIdNodo())
+                            .append(" [label=\"instrucciones\"];\n");
+                }
+            }
+        }
     }
 
 }

@@ -89,4 +89,24 @@ public class AsignacionAtributoStruct extends Instruccion {
     public void setExpresion(Expresion expresion) {
         this.expresion = expresion;
     }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Asignacion Atributo Struct \", fillcolor=\"white\"];\n");
+
+        if (this.llamada != null) {
+            this.llamada.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.llamada.getIdNodo())
+                    .append(" [label=\"destino\"];\n");
+        }
+
+        if (this.expresion != null) {
+            this.expresion.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.expresion.getIdNodo())
+                    .append(" [label=\"valor\"];\n");
+        }
+    }
 }

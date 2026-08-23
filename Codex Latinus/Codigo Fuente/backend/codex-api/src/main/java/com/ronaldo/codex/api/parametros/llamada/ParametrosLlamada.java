@@ -62,4 +62,23 @@ public class ParametrosLlamada extends Expresion {
         this.parametros = parametros;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Argumentos Llamada\\n(Total: ")
+                .append(this.parametros != null ? this.parametros.size() : 0)
+                .append(")\", fillcolor=\"white\"];\n");
+
+        if (this.parametros != null) {
+            for (Expresion param : this.parametros) {
+                if (param != null) {
+                    param.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(param.getIdNodo())
+                            .append(" [label=\"argumento\"];\n");
+                }
+            }
+        }
+    }
+
 }

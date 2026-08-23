@@ -8,6 +8,7 @@ import { TablaSimbolosComponent } from "../../componentes/tabla-simbolos/tabla-s
 import { CampoTraduccionComponent } from "../../componentes/campo-traduccion/campo-traduccion.component";
 import { TraduccionService } from '../../servicios/traduccion/Traduccion.service';
 import { RespuestaService } from '../../servicios/respuesta/Respuesta.service';
+import { SeccionAstComponent } from "../../componentes/seccion-ast/seccion-ast.component";
 
 @Component({
   selector: 'app-home-page',
@@ -19,8 +20,9 @@ import { RespuestaService } from '../../servicios/respuesta/Respuesta.service';
     EditorComponent,
     TablaErroresComponent,
     TablaSimbolosComponent,
-    CampoTraduccionComponent
-  ],
+    CampoTraduccionComponent,
+    SeccionAstComponent
+],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })

@@ -15,19 +15,18 @@ public class CicloDoWhile extends Ciclo {
     public CicloDoWhile(Condicion condicion, int fila, int columna) {
         super(condicion, fila, columna);
     }
-    
+
     @Override
-    public void realizarTraduccion(StringBuffer sb){
+    public void realizarTraduccion(StringBuffer sb) {
         sb.append("acerefay { \n");
-        
+
         traducirInstruccionesInternas(sb);
-        
+
         sb.append("} umday (");
         condicion.realizarTraduccion(sb);
         sb.append(");");
-        
+
     }
-    
 
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
@@ -56,6 +55,31 @@ public class CicloDoWhile extends Ciclo {
 
         }
 
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Ciclo Do While\", fillcolor=\"white\"];\n");
+
+        if (this.condicion != null) {
+            this.condicion.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.condicion.getIdNodo())
+                    .append(" [label=\"condición\"];\n");
+        }
+
+        if (this.instruccionesInternas != null) {
+            for (Instruccion inst : this.instruccionesInternas) {
+                if (inst != null) {
+                    inst.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(inst.getIdNodo())
+                            .append(" [label=\"instrucción\"];\n");
+                }
+            }
+        }
     }
 
 }

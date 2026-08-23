@@ -28,7 +28,7 @@ public class FuncionImpresion extends FuncionEspecial {
             if (exp != null) {
                 sb.append("%OINK ");
                 exp.realizarTraduccion(sb);
-                sb.append("\n"); 
+                sb.append("\n");
             }
         }
     }
@@ -47,6 +47,24 @@ public class FuncionImpresion extends FuncionEspecial {
         for (int i = 0; i < expresiones.size(); i++) {
             expresiones.get(i).verificarSemantica(semantica);
 
+        }
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Funcion Impresion (%OINK)\", fillcolor=\"white\"];\n");
+
+        if (this.expresiones != null) {
+            for (Expresion exp : this.expresiones) {
+                if (exp != null) {
+                    exp.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(exp.getIdNodo())
+                            .append(" [label=\"expresion\"];\n");
+                }
+            }
         }
     }
 

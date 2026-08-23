@@ -117,4 +117,16 @@ public class AccesoAtributoStruct extends Expresion {
         }
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        StringBuilder ruta = new StringBuilder(this.idInstancia != null ? this.idInstancia : "");
+        if (this.idsLlamada != null) {
+            for (String atr : this.idsLlamada) {
+                ruta.append(".").append(atr);
+            }
+        }
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Acceso Atributo:\\n").append(ruta.toString())
+                .append("\", fillcolor=\"white\"];\n");
+    }
 }

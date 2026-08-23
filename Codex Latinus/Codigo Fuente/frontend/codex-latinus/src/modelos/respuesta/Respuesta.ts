@@ -6,4 +6,5 @@ export interface Respuesta {
     errores: ErrorAnalisis[];
     tablaSimbolos:Simbolo[];
     traduccionPigLatin:string;
+    archivoDot: string;
 }

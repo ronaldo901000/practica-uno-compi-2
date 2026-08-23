@@ -54,4 +54,21 @@ public class BloqueVariables extends Nodo {
 
     }
 
+@Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+          .append(" [label=\"Bloque Variables\", fillcolor=\"white\"];\n");
+
+        if (declaraciones != null) {
+            for (Declaracion dec : declaraciones) {
+                if (dec != null) {
+                    dec.generarDot(sb); 
+                    sb.append("  nodo").append(idNodo)
+                      .append(" -> nodo").append(dec.getIdNodo())
+                      .append(";\n");
+                }
+            }
+        }
+    }
+
 }

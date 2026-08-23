@@ -58,4 +58,21 @@ public class BloqueMaior extends Nodo {
         }
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Bloque Maior (Main)\", fillcolor=\"white\"];\n");
+
+        if (instrucciones != null) {
+            for (Instruccion inst : instrucciones) {
+                if (inst != null) {
+                    inst.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(inst.getIdNodo())
+                            .append(";\n");
+                }
+            }
+        }
+    }
+
 }

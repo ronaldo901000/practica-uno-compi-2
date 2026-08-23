@@ -72,4 +72,42 @@ public class Ast extends Nodo {
         this.bloqueMunera = bloqueMunera;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+    }
+
+    public String generarDotCompleto() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("digraph AST {\n");
+        sb.append("  node [shape=box, style=\"filled,rounded\", fillcolor=\"#f0f4f8\", fontname=\"Helvetica\"];\n");
+        sb.append("  edge [fontname=\"Helvetica\", fontsize=10];\n\n");
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"AST (Codex Latinus)\", fillcolor=\"#2b5c8f\", fontcolor=\"white\"];\n");
+
+        if (this.bloqueVariables != null) {
+            this.bloqueVariables.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.bloqueVariables.getIdNodo())
+                    .append(" [label=\"variables\"];\n");
+        }
+
+        if (this.bloqueMunera != null) {
+            this.bloqueMunera.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.bloqueMunera.getIdNodo())
+                    .append(" [label=\"funciones/munera\"];\n");
+        }
+
+        if (this.bloqueMaior != null) {
+            this.bloqueMaior.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.bloqueMaior.getIdNodo())
+                    .append(" [label=\"main/maior\"];\n");
+        }
+
+        sb.append("}\n");
+        return sb.toString();
+    }
+
 }

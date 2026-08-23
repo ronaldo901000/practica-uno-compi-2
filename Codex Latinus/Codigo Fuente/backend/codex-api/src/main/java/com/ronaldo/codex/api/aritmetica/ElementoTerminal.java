@@ -46,4 +46,15 @@ public class ElementoTerminal extends Expresion {
         this.valor = valor;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        String textoValor = this.valor != null ? this.valor.toString() : "null";
+
+        textoValor = textoValor.replace("\"", "\\\"");
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"").append(textoValor)
+                .append("\", fillcolor=\"white\"];\n");
+    }
+
 }

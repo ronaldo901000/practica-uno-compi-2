@@ -33,7 +33,7 @@ public class AsignacionArray extends Instruccion {
         sb.append("] ");
         sb.append(" = ");
         expresion.realizarTraduccion(sb);
-        sb.append("; " );
+        sb.append("; ");
     }
 
     @Override
@@ -163,6 +163,19 @@ public class AsignacionArray extends Instruccion {
 
     public void setColumna(int columna) {
         this.columna = columna;
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Asignación Arreglo: ").append(this.id)
+                .append("[").append(this.posicion).append("] =\", fillcolor=\"white\"];\n");
+        if (this.expresion != null) {
+            this.expresion.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.expresion.getIdNodo())
+                    .append(" [label=\"valor\"];\n");
+        }
     }
 
 }

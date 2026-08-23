@@ -48,11 +48,9 @@ public class ElementoConstruccionStruct extends Nodo {
 
         if (this.valorExpresion != null) {
 
-
-            if (this.valorExpresion.getNombreTipoEstructura() != null 
+            if (this.valorExpresion.getNombreTipoEstructura() != null
                     && !this.valorExpresion.getNombreTipoEstructura().equals("-")) {
                 tipoIngresado = this.valorExpresion.getNombreTipoEstructura();
-
 
             } else if (this.valorExpresion.getTipoResultado() != null) {
                 tipoIngresado = this.valorExpresion.getTipoResultado().name();
@@ -144,6 +142,28 @@ public class ElementoConstruccionStruct extends Nodo {
 
     public void setValorExpresion(Expresion valorExpresion) {
         this.valorExpresion = valorExpresion;
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+        StringBuilder label = new StringBuilder();
+        label.append("Elemento Struct\\nCampo: ").append(this.id);
+        if (this.esArreglo) {
+            label.append(" [").append(this.tamañoArray).append("]");
+        } else if (this.tipoDato != null) {
+            label.append("\\nTipo: ").append(this.tipoDato);
+        }
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"").append(label.toString())
+                .append("\", fillcolor=\"white\"];\n");
+
+        if (this.valorExpresion != null) {
+            this.valorExpresion.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.valorExpresion.getIdNodo())
+                    .append(" [label=\"valor\"];\n");
+        }
     }
 
 }

@@ -42,4 +42,17 @@ public class AsignacionAbreviada extends Instruccion {
         this.operador = operador;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Asignacion Abreviada\", fillcolor=\"white\"];\n");
+
+        if (this.operador != null) {
+            this.operador.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.operador.getIdNodo())
+                    .append(";\n");
+        }
+    }
+
 }

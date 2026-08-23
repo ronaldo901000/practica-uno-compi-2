@@ -95,4 +95,9 @@ public class Division extends Aritmetica {
         return false;
     }
 
+    @Override
+    protected String getOperador() {
+        return "/";
+    }
+
 }

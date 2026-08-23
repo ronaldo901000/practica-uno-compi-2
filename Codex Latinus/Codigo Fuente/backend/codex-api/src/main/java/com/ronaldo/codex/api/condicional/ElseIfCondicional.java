@@ -54,4 +54,28 @@ public class ElseIfCondicional extends Condicional {
         }
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Bloque Else-If\", fillcolor=\"white\"];\n");
+
+        if (this.condicion != null) {
+            this.condicion.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.condicion.getIdNodo())
+                    .append(" [label=\"condición\"];\n");
+        }
+
+        if (this.instruccionesInternas != null) {
+            for (Instruccion inst : this.instruccionesInternas) {
+                if (inst != null) {
+                    inst.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(inst.getIdNodo())
+                            .append(" [label=\"instrucción\"];\n");
+                }
+            }
+        }
+    }
+
 }

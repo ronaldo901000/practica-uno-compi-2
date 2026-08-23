@@ -27,7 +27,7 @@ public class FuncionVoid extends Funcion {
     public void realizarTraduccion(StringBuffer sb) {
         sb.append("actioway ");
         sb.append(traductor.traducir(id)).append("(");
-        
+
         traducirParametros(sb);
         sb.append(") \n").append("{").append("\n");
         traducirSeccionVariables(sb);
@@ -95,5 +95,45 @@ public class FuncionVoid extends Funcion {
         }
 
         semantica.salirAmbito();
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Funcion Void:\\n").append(this.id)
+                .append("()\", fillcolor=\"white\"];\n");
+
+        if (this.parametros != null) {
+            for (ParametroCreacion param : this.parametros) {
+                if (param != null) {
+                    param.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(param.getIdNodo())
+                            .append(" [label=\"parametro\"];\n");
+                }
+            }
+        }
+
+        if (this.variables != null) {
+            for (Declaracion dec : this.variables) {
+                if (dec != null) {
+                    dec.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(dec.getIdNodo())
+                            .append(" [label=\"variable\"];\n");
+                }
+            }
+        }
+
+        if (this.instrucciones != null) {
+            for (Instruccion inst : this.instrucciones) {
+                if (inst != null) {
+                    inst.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(inst.getIdNodo())
+                            .append(" [label=\"instruccion\"];\n");
+                }
+            }
+        }
     }
 }

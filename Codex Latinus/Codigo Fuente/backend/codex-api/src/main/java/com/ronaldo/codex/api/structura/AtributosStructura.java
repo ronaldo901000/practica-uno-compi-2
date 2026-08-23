@@ -92,4 +92,23 @@ public class AtributosStructura extends Nodo {
         this.atributos = atributos;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Atributos Structura")
+                .append(this.atributos != null ? this.atributos.size() : 0)
+                .append(")\", fillcolor=\"white\"];\n");
+
+        if (this.atributos != null) {
+            for (AtributoStructura atr : this.atributos) {
+                if (atr != null) {
+                    atr.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(atr.getIdNodo())
+                            .append(" [label=\"atributo\"];\n");
+                }
+            }
+        }
+    }
+
 }

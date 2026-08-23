@@ -52,7 +52,6 @@ public class DeclaracionStructura extends Declaracion {
                 semantica.getAmbitoActual()
         );
 
-        
         if (this.atributos != null) {
             this.atributos.verificarSemantica(semantica);
 
@@ -72,6 +71,20 @@ public class DeclaracionStructura extends Declaracion {
 
     public void setAtributos(AtributosStructura atributos) {
         this.atributos = atributos;
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Declaracion Structura\\nID: ")
+                .append(this.id)
+                .append("\", fillcolor=\"white\"];\n");
+        if (this.atributos != null) {
+            this.atributos.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.atributos.getIdNodo())
+                    .append(" [label=\"atributos\"];\n");
+        }
     }
 
 }

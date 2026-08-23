@@ -24,10 +24,10 @@ public class Asignacion extends Instruccion {
     }
 
     @Override
-    public void realizarTraduccion(StringBuffer sb){
-        
+    public void realizarTraduccion(StringBuffer sb) {
+
     }
-    
+
     @Override
     public void verificarSemantica(Semantica semantica) throws Exception {
         String ambitoActual = semantica.getAmbitoActual();
@@ -135,6 +135,20 @@ public class Asignacion extends Instruccion {
 
     public void setColumna(int columna) {
         this.columna = columna;
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Asignacion: ").append(this.id)
+                .append("\", fillcolor=\"white\"];\n");
+
+        if (this.expresion != null) {
+            this.expresion.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.expresion.getIdNodo())
+                    .append(" [label=\"valor\"];\n");
+        }
     }
 
 }

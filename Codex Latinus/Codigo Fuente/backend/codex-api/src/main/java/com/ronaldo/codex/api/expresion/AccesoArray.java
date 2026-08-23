@@ -103,4 +103,11 @@ public class AccesoArray extends Expresion {
         this.id = id;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Acceso Arreglo:\\n").append(this.id)
+                .append("[").append(this.posicion).append("]\",")
+                .append(" fillcolor=\"white\"];\n");
+    }
 }

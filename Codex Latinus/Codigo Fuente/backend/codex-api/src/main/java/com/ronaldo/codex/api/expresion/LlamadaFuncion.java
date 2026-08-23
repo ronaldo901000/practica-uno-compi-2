@@ -3,6 +3,7 @@ package com.ronaldo.codex.api.expresion;
 import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorSemantico;
 import com.ronaldo.codex.api.enums.Categoria;
 import com.ronaldo.codex.api.enums.Tipo;
+import com.ronaldo.codex.api.instruccion.Instruccion;
 import com.ronaldo.codex.api.parametros.llamada.ParametrosLlamada;
 import com.ronaldo.codex.api.semantica.Semantica;
 import com.ronaldo.codex.api.semantica.Simbolo;
@@ -143,6 +144,21 @@ public class LlamadaFuncion extends Expresion {
 
     public void setParametros(ParametrosLlamada parametros) {
         this.parametros = parametros;
+    }
+
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Llamada Funcion:\\n").append(this.id)
+                .append("()\", fillcolor=\"white\"];\n");
+
+        if (this.parametros != null) {
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.parametros.getIdNodo())
+                    .append(" [label=\"parametros\"];\n");
+
+            this.parametros.generarDot(sb);
+        }
     }
 
 }

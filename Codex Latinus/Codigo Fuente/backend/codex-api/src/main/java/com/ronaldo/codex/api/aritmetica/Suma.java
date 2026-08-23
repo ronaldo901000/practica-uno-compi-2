@@ -84,4 +84,9 @@ public class Suma extends Aritmetica {
         };
     }
 
+    @Override
+    protected String getOperador() {
+        return "+";
+    }
+
 }

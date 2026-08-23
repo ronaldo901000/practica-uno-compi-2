@@ -121,4 +121,14 @@ public class ParametroCreacion extends Nodo {
         this.columna = columna;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        String tipoTexto = (this.tipo != null) ? this.tipo.getText() : "indefinido";
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Parametro:\\n").append(this.id)
+                .append("\\nTipo: ").append(tipoTexto)
+                .append("\", fillcolor=\"white\"];\n");
+    }
+
 }

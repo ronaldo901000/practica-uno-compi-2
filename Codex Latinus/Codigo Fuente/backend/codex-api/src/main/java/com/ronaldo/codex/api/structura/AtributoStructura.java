@@ -109,4 +109,15 @@ public class AtributoStructura extends Nodo {
         this.columna = columna;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        String estNombre = (this.estructura != null) ? this.estructura.getNombreEnMinusculas() : "atributo";
+
+       
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Atributo (").append(estNombre).append("):\\n")
+                .append("ID: ").append(this.id != null ? this.id : "")
+                .append("\\nTipo: ").append(this.tipoDato != null ? this.tipoDato : "")
+                .append("\", fillcolor=\"white\"];\n");
+    }
 }

@@ -53,4 +53,24 @@ public abstract class Aritmetica extends Expresion {
         }
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"").append(getOperador()).append("\", fillcolor=\"white\"];\n");
+
+        if (this.valorUno != null) {
+            this.valorUno.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.valorUno.getIdNodo()).append(";\n");
+        }
+
+        if (this.valorDos != null) {
+            this.valorDos.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.valorDos.getIdNodo()).append(";\n");
+        }
+    }
+
+    protected abstract String getOperador();
+
 }

@@ -81,4 +81,17 @@ public class Retorno extends Instruccion {
         return valor;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Retorno (reddere)\", fillcolor=\"white\"];\n");
+
+        if (this.valor != null) {
+            this.valor.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.valor.getIdNodo())
+                    .append(" [label=\"valor\"];\n");
+        }
+    }
+
 }

@@ -90,4 +90,23 @@ public class ParametrosCreacion extends Nodo {
         this.tipoResultado = tipoResultado;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Parametros\\n(Total: ")
+                .append(this.parametros != null ? this.parametros.size() : 0)
+                .append(")\", fillcolor=\"white\"];\n");
+
+        if (this.parametros != null) {
+            for (ParametroCreacion param : this.parametros) {
+                if (param != null) {
+                    param.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(param.getIdNodo())
+                            .append(" [label=\"parametro\"];\n");
+                }
+            }
+        }
+    }
+
 }

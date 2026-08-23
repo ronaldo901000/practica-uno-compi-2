@@ -119,4 +119,43 @@ public class CicloIterador extends Ciclo {
         this.valor = valor;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Ciclo Iterador\", fillcolor=\"white\"];\n");
+
+        if (this.valor != null) {
+            this.valor.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.valor.getIdNodo())
+                    .append(" [label=\"inicialización\"];\n");
+        }
+
+        if (this.condicion != null) {
+            this.condicion.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.condicion.getIdNodo())
+                    .append(" [label=\"condicion\"];\n");
+        }
+
+        if (this.expresionIterador != null) {
+            this.expresionIterador.generarDot(sb);
+            sb.append("  nodo").append(idNodo)
+                    .append(" -> nodo").append(this.expresionIterador.getIdNodo())
+                    .append(" [label=\"aumento\"];\n");
+        }
+
+        if (this.instruccionesInternas != null) {
+            for (Instruccion inst : this.instruccionesInternas) {
+                if (inst != null) {
+                    inst.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(inst.getIdNodo())
+                            .append(" [label=\"contenido\"];\n");
+                }
+            }
+        }
+    }
+
 }

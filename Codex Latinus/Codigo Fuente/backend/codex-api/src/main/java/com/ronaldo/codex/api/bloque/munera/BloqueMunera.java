@@ -52,4 +52,21 @@ public class BloqueMunera extends Nodo {
         }
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"Bloque Munera (Funciones)\", fillcolor=\"white\"];\n");
+
+        if (funciones != null) {
+            for (Funcion fun : funciones) {
+                if (fun != null) {
+                    fun.generarDot(sb);
+                    sb.append("  nodo").append(idNodo)
+                            .append(" -> nodo").append(fun.getIdNodo())
+                            .append(";\n");
+                }
+            }
+        }
+    }
+
 }

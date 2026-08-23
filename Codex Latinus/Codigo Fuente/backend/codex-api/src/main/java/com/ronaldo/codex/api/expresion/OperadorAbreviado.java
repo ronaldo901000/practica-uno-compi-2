@@ -110,4 +110,13 @@ public class OperadorAbreviado extends Expresion {
         this.id = id;
     }
 
+    @Override
+    public void generarDot(StringBuffer sb) {
+        String simboloOperador = (this.tipo != null) ? this.tipo.getOperador() : "";
+
+        sb.append("  nodo").append(idNodo)
+                .append(" [label=\"OpAbreviado: ").append(this.id).append(" ").append(simboloOperador)
+                .append("\", fillcolor=\"white\"];\n");
+    }
+
 }
