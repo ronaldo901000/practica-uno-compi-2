@@ -1,0 +1,147 @@
+.simulador-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  font-family: 'Courier New', monospace;
+}
+
+.controles {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.controles button {
+  min-width: 36px;
+  height: 36px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+}
+
+.controles button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.contador {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.simulador-body {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.pila-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 160px;
+}
+
+.pila {
+  display: flex;
+  flex-direction: column-reverse;
+  border: 2px solid #e0c26b;
+  border-radius: 0 0 12px 12px;
+  min-height: 200px;
+  max-height: 400px;
+  width: 160px;
+  padding: 6px;
+  background-color: #fdf5e0;
+  overflow-y: auto;
+}
+
+.elemento-pila {
+  padding: 8px 4px;
+  margin: 3px 0;
+  text-align: center;
+  border-radius: 6px;
+  font-weight: bold;
+  border: 1px solid #333;
+  font-size: 13px;
+  word-break: break-word;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.terminal {
+  background-color: #f4b6b6;
+}
+
+.no-terminal {
+  background-color: #a9d3f0;
+}
+
+
+.log-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 260px;
+  flex: 1;
+}
+
+.log-titulo {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.log {
+  background-color: #111;        
+  color: #eee;
+  border-radius: 8px;
+  padding: 12px;
+  height: 400px;                
+  max-height: 400px;
+  overflow-y: auto;              
+  border: 1px solid #333;
+}
+
+.log-linea {
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-bottom: 3px;
+  white-space: pre-wrap;
+}
+
+.log-linea.activa {
+  background-color: #444;
+  color: #fff;
+  font-weight: bold;
+}
+
+
+.log::-webkit-scrollbar {
+  width: 8px;
+}
+
+.log::-webkit-scrollbar-track {
+  background: #222;
+  border-radius: 8px;
+}
+
+.log::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 8px;
+}
+
+.log::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+
+.accion-actual {
+  font-size: 15px;
+  text-align: center;
+}

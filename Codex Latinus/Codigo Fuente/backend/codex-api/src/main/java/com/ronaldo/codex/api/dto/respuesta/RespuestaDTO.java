@@ -2,6 +2,7 @@ package com.ronaldo.codex.api.dto.respuesta;
 
 import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorAnalisis;
 import com.ronaldo.codex.api.dto.simbolo.SimboloDTO;
+import com.ronaldo.codex.api.pila.llamadas.SimulacionParseo;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public class RespuestaDTO {
     private List<SimboloDTO> tablaSimbolos;
     private String traduccionPigLatin;
     private String archivoDot;
+    private SimulacionParseo simulacionParseo;
 
     public boolean isHayErrores() {
         return hayErrores;
@@ -55,7 +57,13 @@ public class RespuestaDTO {
     public void setArchivoDot(String archivoDot) {
         this.archivoDot = archivoDot;
     }
-    
-    
+
+    public SimulacionParseo getSimulacionParseo() {
+        return simulacionParseo;
+    }
+
+    public void setSimulacionParseo(SimulacionParseo simulacionParseo) {
+        this.simulacionParseo = simulacionParseo;
+    }
 
 }

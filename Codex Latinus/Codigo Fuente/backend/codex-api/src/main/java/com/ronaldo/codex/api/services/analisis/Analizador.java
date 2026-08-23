@@ -7,6 +7,7 @@ import com.ronaldo.codex.api.dto.entrada.error.analisis.ErrorAnalisis;
 import com.ronaldo.codex.api.dto.respuesta.RespuestaDTO;
 import com.ronaldo.codex.api.exceptions.EntradaException;
 import com.ronaldo.codex.api.ast.Ast;
+import com.ronaldo.codex.api.listener.SimuladorListener;
 import com.ronaldo.codex.api.listeners.ErrorLexicoListener;
 import com.ronaldo.codex.api.listeners.ErrorSintacticoListener;
 import com.ronaldo.codex.api.semantica.Semantica;
@@ -19,6 +20,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 /**
  *
@@ -59,6 +61,12 @@ public class Analizador {
             return respuesta;
         }
 
+        //
+        SimuladorListener listenerPila = new SimuladorListener();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(listenerPila, tree);
+        respuesta.setSimulacionParseo(listenerPila.obtenerResultado());
+        
         //recorrido del arbol
         CodexVisitor visitor = new CodexVisitor();
         Ast ast = (Ast) visitor.visit(tree);
@@ -77,11 +85,11 @@ public class Analizador {
             //Generacion de la traduccion al lenguaje pig latin
             StringBuffer sb = new StringBuffer();
             ast.realizarTraduccion(sb);
-            
+
             //Generar archivo .dot
             String dot = ast.generarDotCompleto();
             respuesta.setArchivoDot(dot);
-            
+
             respuesta.setTraduccionPigLatin(sb.toString());
         }
 

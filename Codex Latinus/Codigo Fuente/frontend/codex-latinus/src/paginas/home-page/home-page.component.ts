@@ -9,7 +9,7 @@ import { CampoTraduccionComponent } from "../../componentes/campo-traduccion/cam
 import { TraduccionService } from '../../servicios/traduccion/Traduccion.service';
 import { RespuestaService } from '../../servicios/respuesta/Respuesta.service';
 import { SeccionAstComponent } from "../../componentes/seccion-ast/seccion-ast.component";
-
+import { SimuladorPilaComponent } from '../../componentes/simulador-pila/simulador-pila.component';
 @Component({
   selector: 'app-home-page',
   standalone: true,
@@ -21,7 +21,8 @@ import { SeccionAstComponent } from "../../componentes/seccion-ast/seccion-ast.c
     TablaErroresComponent,
     TablaSimbolosComponent,
     CampoTraduccionComponent,
-    SeccionAstComponent
+    SeccionAstComponent,
+    SimuladorPilaComponent
 ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'

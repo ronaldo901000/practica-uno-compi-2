@@ -1,0 +1,50 @@
+<div class="simulador-container" *ngIf="pasos && pasos.length > 0">
+
+  <!-- Controles de navegación -->
+  <div class="controles">
+    <button (click)="irAlPrimero()" [disabled]="pasoActual === 0">«</button>
+    <button (click)="anterior()" [disabled]="pasoActual === 0">‹</button>
+    <span class="contador">{{ pasoActual + 1 }} / {{ pasos.length }}</span>
+    <button (click)="siguiente()" [disabled]="pasoActual === pasos.length - 1">›</button>
+    <button (click)="irAlUltimo()" [disabled]="pasoActual === pasos.length - 1">»</button>
+  </div>
+
+  <div class="simulador-body">
+
+    <!-- Pila -->
+    <div class="pila-wrapper">
+      <div class="pila">
+        <div
+          *ngFor="let item of pilaActual.slice().reverse()"
+          class="elemento-pila"
+          [ngClass]="item.tipo === 'terminal' ? 'terminal' : 'no-terminal'">
+          {{ item.simbolo }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Log de acciones -->
+    <div class="log-wrapper">
+      <div class="log-titulo">LOG</div>
+      <div class="log">
+        <div
+          *ngFor="let linea of logAcumulado; let i = index"
+          class="log-linea"
+          [class.activa]="i === pasoActual">
+          {{ linea }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Acción actual destacada -->
+  <div class="accion-actual">
+    Acción actual: <strong>{{ pasos[pasoActual]?.detalleAccion }}</strong>
+  </div>
+
+</div>
+
+<div *ngIf="!pasos || pasos.length === 0" class="sin-datos">
+  No hay simulación disponible. Ejecuta un análisis primero.
+</div>
