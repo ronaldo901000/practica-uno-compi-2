@@ -52,6 +52,7 @@ export class SimuladorPilaComponent implements OnInit, OnDestroy {
       .map(p => p.detalleAccion);
   }
 
+
   siguiente(): void {
     if (this.pasoActual < this.pasos.length - 1) {
       this.pasoActual++;
