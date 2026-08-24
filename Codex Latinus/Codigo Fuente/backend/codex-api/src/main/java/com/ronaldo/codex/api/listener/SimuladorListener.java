@@ -35,7 +35,9 @@ public class SimuladorListener extends CodexBaseListener {
     public void exitEveryRule(ParserRuleContext ctx) {
         int cantidadHijos = ctx.getChildCount();
         for (int i = 0; i < cantidadHijos; i++) {
-            pilaActual.remove(pilaActual.size() - 1);
+            if (!pilaActual.isEmpty()) {
+                pilaActual.remove(pilaActual.size() - 1);
+            }
         }
         String nombreRegla = CodexParser.ruleNames[ctx.getRuleIndex()];
         pilaActual.add(new ElementoPila(nombreRegla, "noTerminal"));
@@ -45,6 +47,14 @@ public class SimuladorListener extends CodexBaseListener {
                 "reduce",
                 "reduce " + nombreRegla
         ));
+        if (ctx.getParent() == null) {
+            pasos.add(new PasoParseo(
+                    ++contador,
+                    new ArrayList<>(pilaActual),
+                    "accept",
+                    "accept"
+            ));
+        }
     }
 
     public SimulacionParseo obtenerResultado() {

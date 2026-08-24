@@ -8,7 +8,7 @@ import { RespuestaService } from '../../servicios/respuesta/Respuesta.service';
 @Component({
   selector: 'app-simulador-pila',
   standalone: true,
-  imports: [CommonModule, NgClass], 
+  imports: [CommonModule, NgClass],
   templateUrl: './simulador-pila.component.html',
   styleUrl: './simulador-pila.component.css'
 })
@@ -37,9 +37,15 @@ export class SimuladorPilaComponent implements OnInit, OnDestroy {
   }
 
   get pilaActual(): ElementoPila[] {
-    return this.pasos[this.pasoActual]?.pila ?? [];
-  }
+    const paso = this.pasos[this.pasoActual];
+    if (!paso) return [];
 
+    if (paso.accion === 'accept') {
+      return [{ simbolo: 'pila vacía', tipo: 'vacia' }];
+    }
+
+    return paso.pila ?? [];
+  }
   get logAcumulado(): string[] {
     return this.pasos
       .slice(0, this.pasoActual + 1)
